@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile.dev
+    container_name: bot
+    volumes:
+      - ./app:/usr/src/project/app
+    env_file: ./.env.dev
+    depends_on:
+      - db
+  
+  db: 
+    image: postgres:14.2
+    container_name: postgres
+    volumes:
+      - postgres_data:/var/lib/postgres/data/
+    env_file: ./.env.dev
+
+volumes:
+  postgres_data:
+    

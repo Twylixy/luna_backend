@@ -1,0 +1,26 @@
+# Pull image
+FROM python:3.9.8-alpine3.14
+
+# Set workdir
+WORKDIR /usr/src/project
+
+# Env vars
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Dependencies for psycopg2
+RUN apk update
+RUN apk add postgresql-dev gcc python3-dev musl-dev
+
+# Copy project
+COPY . .
+
+# Project dependencies
+RUN pip install --upgrade pip
+RUN pip install -r requirements.dev.txt
+
+RUN sed -i 's/\r$//g' /usr/src/project/docker/app/entrypoint.dev.sh
+RUN chmod +x /usr/src/project/docker/app/entrypoint.dev.sh
+
+# Entrypoint
+ENTRYPOINT ["/bin/sh", "/usr/src/project/docker/app/entrypoint.dev.sh"]
