@@ -30,6 +30,13 @@ $ docker-compose -f docker-compose.dev.yml -p "luna" up --build -d
 $ docker-compose -f docker-compose.prod.yml -p "luna" up --build -d
 ```
 
+## Develop on Windows
+Before run the project make sure, that you've added environment variables to the project environment. \
+To add environment variables use that instructions:
+* Execute `poetry install`
+* Open `PROJECT_HOME\.venv\Scripts\activate.ps1`
+* Add all required variables. Example `$env:VAR_NAME=VALUE` 
+
 ## On dependencies updates
 ### Develope requirements.txt
 ```bash
@@ -39,4 +46,3 @@ $ poetry export --dev -f requirements.txt -o requirements.dev.txt
 ```bash
 $ poetry export -f requirements.txt -o requirements.prod.txt
 ```
-

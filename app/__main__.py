@@ -1,7 +1,8 @@
 import logging
 from os import environ
 
-from .entrypoints import luna_instance
+from app.cogs import SayerCog
+from app.entrypoints import luna_instance
 
 logging.basicConfig(
     level=environ.get('DEBUG_LEVEL', 'INFO'),
@@ -12,4 +13,7 @@ logging.basicConfig(
     datefmt=environ.get('DEBUG_DATEFMT', '%H:%M:%S'),
 )
 
-luna_instance.run(environ.get("BOT_TOKEN"))
+luna_instance.add_cog(SayerCog(luna_instance))
+
+if __name__ == '__main__':
+    luna_instance.run(environ.get('BOT_TOKEN'))
