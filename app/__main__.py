@@ -1,7 +1,7 @@
 import logging
 from os import environ
 
-from app.cogs import SayerCog
+from app.cogs import InfractorCog, SayerCog
 from app.entrypoints import luna_instance
 
 logging.basicConfig(
@@ -14,6 +14,7 @@ logging.basicConfig(
 )
 
 luna_instance.add_cog(SayerCog(luna_instance))
+luna_instance.add_cog(InfractorCog(luna_instance))
 
 if __name__ == '__main__':
     luna_instance.run(environ.get('BOT_TOKEN'))
