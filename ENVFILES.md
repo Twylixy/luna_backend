@@ -9,9 +9,10 @@ The **.env** configuration files for the project are separated into 2 files (dev
 Configurations for **python logging**\
 You can leave them empty.
 ```
-DEBUG_LEVEL - Debug level (string or int)
-DEBUG_FORMAT - Debug log format (string)
-DEBUG_DATEFMT - Debug date format (string)
+BOT_DEBUG_LEVEL - Debug level (string or int)
+BOT_DEBUG_FORMAT - Debug log format (string)
+BOT_DEBUG_DATEFMT - Debug date format (string)
+BOT_DEBUG_GUILDS_IDS - Guild ids for slash_commands (array[int])
 ```
 ### Bot
 Configurations for **bot**\

@@ -1,4 +1,7 @@
+from os import environ
+
 import discord
+from discord.commands.context import ApplicationContext
 from discord.ext import commands
 from discord.ui import Button, View
 
@@ -7,6 +10,7 @@ from app.callbacks import (
     link_filter_menu_callback,
     spam_detector_menu_callback,
 )
+from app.helpers import DEBUG_GUILDS_IDS, EMBED_DEFAULT_COLOR
 
 
 class InfractorCog(commands.Cog):
@@ -21,20 +25,19 @@ class InfractorCog(commands.Cog):
         """
         self.luna_instance = luna_instance
 
-    @commands.command()
-    async def infractor(self, ctx: commands.Context) -> None:
+    @commands.slash_command(guild_ids=environ.get('BOT_DEBUG_GUILDS_IDS', []).split())
+    async def infractor(self, ctx: ApplicationContext) -> None:
         """
         Setup command for infractor
 
         Params:
             ctx: commands.Context
         """
-
         infractor_embed = (
             discord.Embed(
                 title='🟢 Infractor | Dashboard',
                 description='They cannot confronts to empress',
-                color=discord.Color.from_rgb(54, 62, 122),
+                color=EMBED_DEFAULT_COLOR,
             )
             .add_field(
                 name='💬 Bad Messages',
@@ -80,4 +83,4 @@ class InfractorCog(commands.Cog):
             spam_detector_button,
         )
 
-        await ctx.send(embed=infractor_embed, view=view)
+        await ctx.respond(embed=infractor_embed, view=view)
