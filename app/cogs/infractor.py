@@ -10,7 +10,8 @@ from app.callbacks import (
     link_filter_menu_callback,
     spam_detector_menu_callback,
 )
-from app.helpers import DEBUG_GUILDS_IDS, EMBED_DEFAULT_COLOR
+from app.helpers import EMBED_DEFAULT_COLOR, TextedInfractorSettings
+from app.models import InfractorSettingsModel
 
 
 class InfractorCog(commands.Cog):
@@ -25,7 +26,11 @@ class InfractorCog(commands.Cog):
         """
         self.luna_instance = luna_instance
 
-    @commands.slash_command(guild_ids=environ.get('BOT_DEBUG_GUILDS_IDS', []).split())
+    @commands.slash_command(
+        name='infractor',
+        description='The Infractor module Dashboard',
+        guild_ids=environ.get('BOT_DEBUG_GUILDS_IDS', []).split(),
+    )
     async def infractor(self, ctx: ApplicationContext) -> None:
         """
         Setup command for infractor
@@ -33,25 +38,33 @@ class InfractorCog(commands.Cog):
         Params:
             ctx: commands.Context
         """
+        infractor_settings, created = InfractorSettingsModel.get_or_create(
+            guild_id=ctx.guild.id,
+        )
+
+        texted_infractor_settings = TextedInfractorSettings.get_texted_settings(
+            infractor_settings,
+        )
+
         infractor_embed = (
             discord.Embed(
-                title='🟢 Infractor | Dashboard',
+                title=f'{texted_infractor_settings.infractor_is_enabled} Infractor | Dashboard',
                 description='They cannot confronts to empress',
                 color=EMBED_DEFAULT_COLOR,
             )
             .add_field(
                 name='💬 Bad Messages',
-                value='☑️ Enabled',
+                value=texted_infractor_settings.bad_words_is_enabled,
                 inline=True,
             )
             .add_field(
                 name='🌐 Link Filter',
-                value='❌ Disabled',
+                value=texted_infractor_settings.link_filter_is_enabled,
                 inline=True,
             )
             .add_field(
                 name='🌊 Spam Detector',
-                value='☑️ Enabled',
+                value=texted_infractor_settings.spam_detector_is_enabled,
                 inline=True,
             )
             .set_footer(text='The best way to control content')

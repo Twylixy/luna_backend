@@ -9,3 +9,8 @@ async def change_bad_words_state_callback(interaction: discord.Interaction) -> N
 async def edit_bad_words_callback(interaction: discord.Interaction) -> None:
     """Callback for `edit_bad_words`"""
     await interaction.response.edit_message(embed=None, content='Got event', view=None)
+
+
+async def back_to_infractor_callback(interaction: discord.Interaction) -> None:
+    """Callback for `back_to_infractor`"""
+    await interaction.response.edit_message(embed=None, content='Got event', view=None)
