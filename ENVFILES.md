@@ -27,13 +27,11 @@ BOT_STRIP_AFTER_PREFIX - Bot's strip after prefix (! command -> !command) (bool)
 ### Database
 Database configurations for bot.
 ```
-DATABASE_TYPE - Database type [`mysql` or `postgres`] (string)
 DATABASE_HOST - Database host (string)
 DATABASE_PORT - Database port (string)
 DATABASE_USER - Database user (string)
 DATABASE_PASSWORD - Database user's password (string)
 DATABASE_NAME - Database name (string)
-DATABASE_CHARSET - Database charset (string)
 ```
 ### Bot Modules
 Configurations for bot's modules
@@ -45,7 +43,7 @@ MA_USERS_BLACKLIST - Users blacklist for message analyzer (array[int])
 
 ## # Docker Settings
 Those variables are required for Docker Compose.\
-If you set up with postgres use **POSTGRES** section of configuration, either if you have mysql use **MYSQL** configuration instead. **All of those variables required to be set.**
+**All of those variables required to be set.**
 
 ## # Django Settings
 The following variables sets up Django

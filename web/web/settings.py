@@ -77,7 +77,9 @@ WSGI_APPLICATION = 'web.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': environ.get('DJANGO_DATABASE_ENGINE', 'django.db.backends.sqlite3'),
+        'ENGINE': environ.get(
+            'DJANGO_DATABASE_ENGINE', 'django.db.backends.postgresql'
+        ),
         'NAME': environ.get('DJANGO_DATABASE_NAME', BASE_DIR / 'db.sqlite3'),
         'USER': environ.get('DJANGO_DATABASE_USER', 'user'),
         'PASSWORD': environ.get('DJANGO_DATABASE_PASSWORD', 'password'),
