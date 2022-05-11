@@ -34,14 +34,6 @@ async def on_message(message: discord.Message) -> None:
     Params:
         message: discord.Message
     """
-    GuildModel.get_or_create(
-        guild_id=message.guild.id,
-    )
-
-    UserModel.get_or_create(
-        discord_id=message.author.id,
-    )
-
     await luna_instance.process_commands(message)
 
 
