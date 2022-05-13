@@ -1,2 +1,2 @@
-from .infractor import InfractorCog
-from .sayer import SayerCog
+from .infractor_cog import InfractorCog
+from .sayer_cog import SayerCog

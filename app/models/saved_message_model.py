@@ -1,7 +1,7 @@
 import peewee
 
-from .base import BaseModel
-from .user import UserModel
+from .base_model import BaseModel
+from .user_model import UserModel
 
 
 class SavedMessageModel(BaseModel):

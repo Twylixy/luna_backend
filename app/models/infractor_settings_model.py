@@ -1,8 +1,8 @@
 import peewee
 from this import d
 
-from .base import BaseModel
-from .guild import GuildModel
+from .base_model import BaseModel
+from .guild_model import GuildModel
 
 
 class InfractorSettingsModel(BaseModel):

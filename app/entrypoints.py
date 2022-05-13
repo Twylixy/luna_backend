@@ -7,7 +7,7 @@ from discord.commands.context import ApplicationContext
 from discord.ext import commands
 from discord.ext.commands import Context
 
-from app.models import GuildModel, UserModel
+from app.models import GuildModel, UserModel, InfractorSettingsModel
 
 intents = discord.Intents(messages=True, message_content=True)
 
@@ -54,4 +54,8 @@ async def check_for_user_registration(ctx: Union[Context, ApplicationContext]) -
 
     UserModel.get_or_create(
         discord_id=ctx.author.id,
+    )
+
+    InfractorSettingsModel.get_or_create(
+        guild_id=ctx.guild.id,
     )

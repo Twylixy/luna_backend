@@ -1,2 +1,2 @@
-from .bad_words import *
-from .infractor import *
+from .bad_words_callback import *
+from .infractor_callback import *

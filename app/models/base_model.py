@@ -2,7 +2,7 @@ from os import environ
 
 import peewee
 
-from app.helpers import UnsupportedDatabaseError
+from app.helpers import FailedToConnectToDatabaseException
 
 
 class BaseModel(peewee.Model):
@@ -18,3 +18,9 @@ class BaseModel(peewee.Model):
             password=environ.get('BOT_DATABASE_PASSWORD', 'postgres'),
             database=environ.get('BOT_DATABASE_NAME', 'postgres'),
         )
+
+        try:
+            database.connect()
+            database.close()
+        except peewee.OperationalError as error:
+            raise FailedToConnectToDatabaseException(error)

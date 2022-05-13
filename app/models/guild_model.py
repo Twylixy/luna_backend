@@ -1,6 +1,6 @@
 import peewee
 
-from .base import BaseModel
+from .base_model import BaseModel
 
 
 class GuildModel(BaseModel):

@@ -1,26 +1,37 @@
-import discord
-from discord.ui import Button, View
-
-from app.helpers import EMBED_DEFAULT_COLOR, TextedInfractorSettings
 from app.models import InfractorSettingsModel
+from app.helpers import TextedInfractorSettings
+import discord
+from discord.commands import ApplicationContext
+from discord import Interaction
+from app.helpers import EMBED_DEFAULT_COLOR
 
-from .bad_words import (
-    back_to_infractor_callback,
-    change_bad_words_state_callback,
-    edit_bad_words_callback,
-)
+from discord.ui import View, Button
+from typing import Optional, Tuple, Awaitable, Union
+from discord import Embed
 
 
-async def bad_messages_menu_callback(interaction: discord.Interaction) -> None:
+def get_bad_words_view(
+    ctx: Union[ApplicationContext, Interaction],
+    change_bad_words_state_callback: Awaitable[Interaction],
+    edit_bad_words_callback: Awaitable[Interaction],
+    back_to_infractor_callback: Awaitable[Interaction],
+    infractor_settings: Optional[InfractorSettingsModel] = None,
+) -> Tuple[View, Embed]:
     """
-    Callback for `bad_messages_menu` button id
+    Create `bad messages` view
 
     Params:
-        interaction: discord.Interaction
+        interaction: Union[ApplicationContext, Interaction]
+        change_bad_words_state_callback: Awaitable[Interaction]
+        edit_bad_words_callback: Awaitable[Interaction]
+        back_to_infractor_callback: Awaitable[Interaction]
+        infractor_settings: Optional[InfractorSettingsModel]
     """
-    infractor_settings = InfractorSettingsModel.get(
-        guild_id=interaction.guild.id,
-    )
+
+    if infractor_settings is None:
+        infractor_settings = InfractorSettingsModel.get(
+            guild_id=ctx.guild.id,
+        )
 
     texted_infractor_settings = TextedInfractorSettings.get_texted_settings(
         infractor_settings,
@@ -64,25 +75,9 @@ async def bad_messages_menu_callback(interaction: discord.Interaction) -> None:
     back_to_infractor_button.callback = back_to_infractor_callback
 
     view = View(
-        change_bad_words_state_button, edit_bad_words_button, back_to_infractor_button
+        change_bad_words_state_button,
+        edit_bad_words_button,
+        back_to_infractor_button,
     )
 
-    await interaction.response.edit_message(embed=bad_messages_menu_embed, view=view)
-
-
-async def link_filter_menu_callback(interaction: discord.Interaction) -> None:
-    """Callback for `bad_messages_menu` button id
-
-    Params:
-        interaction: discord.Interaction
-    """
-    await interaction.response.edit_message(embed=None, content='Got event', view=None)
-
-
-async def spam_detector_menu_callback(interaction: discord.Interaction) -> None:
-    """Callback for `bad_messages_menu` button id
-
-    Params:
-        interaction: discord.Interaction
-    """
-    await interaction.response.edit_message(embed=None, content='Got event', view=None)
+    return view, bad_messages_menu_embed
