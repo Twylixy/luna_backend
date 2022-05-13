@@ -1,11 +1,12 @@
 import discord
-from app.models import InfractorSettingsModel
+
 from app.helpers.views import get_bad_words_view
+from app.models import InfractorSettingsModel
 
 
 async def change_bad_words_state_callback(interaction: discord.Interaction) -> None:
     """
-    Callback for `edit_bad_words`
+    Callback for `edit_bad_words` button
 
     Params:
         interaction: discord.Interaction
@@ -33,10 +34,20 @@ async def change_bad_words_state_callback(interaction: discord.Interaction) -> N
 
 
 async def edit_bad_words_callback(interaction: discord.Interaction) -> None:
-    """Callback for `edit_bad_words`"""
+    """
+    Callback for `edit_bad_words` button
+
+    Params:
+        interaction: discord.Interaction
+    """
     await interaction.response.edit_message(embed=None, content='Got event', view=None)
 
 
 async def back_to_infractor_callback(interaction: discord.Interaction) -> None:
-    """Callback for `back_to_infractor`"""
+    """
+    Callback for `back_to_infractor` button
+
+    Params:
+        interaction: discord.Interaction
+    """
     await interaction.response.edit_message(embed=None, content='Got event', view=None)

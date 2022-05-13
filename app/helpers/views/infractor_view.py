@@ -1,12 +1,12 @@
-from discord.ui import Button, View
-from discord.commands import ApplicationContext
-from app.models import InfractorSettingsModel
-from app.helpers import TextedInfractorSettings
+from typing import Awaitable, Optional, Tuple, Union
+
 import discord
-from discord import Interaction
-from discord import Embed
-from app.helpers import EMBED_DEFAULT_COLOR
-from typing import Tuple, Awaitable, Optional, Union
+from discord import Embed, Interaction
+from discord.commands import ApplicationContext
+from discord.ui import Button, View
+
+from app.helpers import EMBED_DEFAULT_COLOR, TextedInfractorSettings
+from app.models import InfractorSettingsModel
 
 
 def get_infractor_view(

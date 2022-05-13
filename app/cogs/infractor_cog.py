@@ -3,12 +3,12 @@ from os import environ
 from discord.commands.context import ApplicationContext
 from discord.ext import commands
 
-from app.helpers.views import get_infractor_view
 from app.callbacks import (
     bad_messages_menu_callback,
     link_filter_menu_callback,
     spam_detector_menu_callback,
 )
+from app.helpers.views import get_infractor_view
 
 
 class InfractorCog(commands.Cog):
@@ -16,7 +16,7 @@ class InfractorCog(commands.Cog):
 
     def __init__(self, luna_instance: commands.Bot) -> None:
         """
-        Initialize a new 'infractor' instance
+        Initialize a new `infractor` instance
 
         Params:
             luna_instance: discord.ext.commands.Bot
@@ -30,10 +30,10 @@ class InfractorCog(commands.Cog):
     )
     async def infractor(self, ctx: ApplicationContext) -> None:
         """
-        Setup command for infractor
+        Dashboard of the `infractor` module
 
         Params:
-            ctx: commands.Context
+            ctx: discord.commands.context.ApplicationContext
         """
         view, infractor_embed = get_infractor_view(
             ctx,

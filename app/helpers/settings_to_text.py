@@ -7,7 +7,7 @@ from app.models import InfractorSettingsModel
 
 @dataclass
 class TextedInfractorSettings:
-    """Represents texted infractor settings states"""
+    """Represents texted `infractor` settings"""
 
     infractor_is_enabled: str
     bad_words_is_enabled: str
@@ -22,7 +22,7 @@ class TextedInfractorSettings:
         Build texted settings from model
 
         Params:
-            settings: InfractorSettings
+            settings: InfractorSettingsModel
         """
         data = {}
 

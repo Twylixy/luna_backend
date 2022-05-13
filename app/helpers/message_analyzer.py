@@ -12,7 +12,6 @@ class MessageAnalyzer:
 
         Params:
             message: discord.Message
-            from_user: discord.Member
         """
         self.entity = message
         self.text = message.content

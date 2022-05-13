@@ -1,15 +1,16 @@
 import discord
-from app.helpers.views import get_bad_words_view
+
 from app.callbacks import (
+    back_to_infractor_callback,
     change_bad_words_state_callback,
     edit_bad_words_callback,
-    back_to_infractor_callback,
 )
+from app.helpers.views import get_bad_words_view
 
 
 async def bad_messages_menu_callback(interaction: discord.Interaction) -> None:
     """
-    Callback for `bad_messages_menu` button id
+    Callback for `bad_messages_menu` button
 
     Params:
         interaction: discord.Interaction
@@ -24,7 +25,8 @@ async def bad_messages_menu_callback(interaction: discord.Interaction) -> None:
 
 
 async def link_filter_menu_callback(interaction: discord.Interaction) -> None:
-    """Callback for `bad_messages_menu` button id
+    """
+    Callback for `link_filter_menu` button
 
     Params:
         interaction: discord.Interaction
@@ -33,7 +35,8 @@ async def link_filter_menu_callback(interaction: discord.Interaction) -> None:
 
 
 async def spam_detector_menu_callback(interaction: discord.Interaction) -> None:
-    """Callback for `bad_messages_menu` button id
+    """
+    Callback for `spam_detector_menu` button
 
     Params:
         interaction: discord.Interaction

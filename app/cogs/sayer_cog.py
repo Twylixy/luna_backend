@@ -7,11 +7,11 @@ from app.models import SavedMessageModel
 
 
 class SayerCog(commands.Cog):
-    """Represent a 'sayer' cog-module"""
+    """Represent a `sayer` cog-module"""
 
     def __init__(self, luna_instance: commands.Bot) -> None:
         """
-        Initialize a new 'sayer' instance
+        Initialize a new `sayer` instance
 
         Params:
             luna_instance: discord.ext.commands.Bot

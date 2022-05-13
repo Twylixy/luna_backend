@@ -1,13 +1,12 @@
-from app.models import InfractorSettingsModel
-from app.helpers import TextedInfractorSettings
-import discord
-from discord.commands import ApplicationContext
-from discord import Interaction
-from app.helpers import EMBED_DEFAULT_COLOR
+from typing import Awaitable, Optional, Tuple, Union
 
-from discord.ui import View, Button
-from typing import Optional, Tuple, Awaitable, Union
-from discord import Embed
+import discord
+from discord import Embed, Interaction
+from discord.commands import ApplicationContext
+from discord.ui import Button, View
+
+from app.helpers import EMBED_DEFAULT_COLOR, TextedInfractorSettings
+from app.models import InfractorSettingsModel
 
 
 def get_bad_words_view(
