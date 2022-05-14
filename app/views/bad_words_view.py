@@ -56,14 +56,14 @@ def get_bad_words_view(
     )
 
     if infractor_settings.bad_words_is_enabled is True:
-        change_bad_words_state_button_label = 'off'
+        change_bad_words_state_button_label = 'Turn off'
         change_bad_words_state_button_style = discord.ButtonStyle.red
     else:
-        change_bad_words_state_button_label = 'on'
+        change_bad_words_state_button_label = 'Turn on'
         change_bad_words_state_button_style = discord.ButtonStyle.green
 
     change_bad_words_state_button = Button(
-        label=f'Turn {change_bad_words_state_button_label}',
+        label=change_bad_words_state_button_label,
         style=change_bad_words_state_button_style,
     )
     edit_bad_words_button = Button(label='Edit words', style=discord.ButtonStyle.gray)

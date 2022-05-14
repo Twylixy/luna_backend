@@ -8,7 +8,7 @@ from app.callbacks import (
     link_filter_menu_callback,
     spam_detector_menu_callback,
 )
-from app.helpers.views import get_infractor_view
+from app.views import get_infractor_view
 
 
 class InfractorCog(commands.Cog):
