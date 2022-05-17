@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from app.models import InfractorSettingsModel
+from app.models.infractor_settings_model import InfractorSettingsModel
 
 
 @dataclass

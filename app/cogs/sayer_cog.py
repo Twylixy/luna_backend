@@ -2,8 +2,8 @@ import discord
 import peewee
 from discord.ext import commands
 
-from app.helpers import MessageAnalyzer
-from app.models import SavedMessageModel
+from app.helpers.message_analyzer import MessageAnalyzer
+from app.models.saved_message_model import SavedMessageModel
 
 
 class SayerCog(commands.Cog):

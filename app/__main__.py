@@ -1,7 +1,8 @@
 import logging
 from os import environ
 
-from app.cogs import InfractorCog, SayerCog
+from app.cogs.infractor_cog import InfractorCog
+from app.cogs.sayer_cog import SayerCog
 from app.entrypoints import luna_instance
 
 logging.basicConfig(

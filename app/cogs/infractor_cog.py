@@ -3,12 +3,13 @@ from os import environ
 from discord.commands.context import ApplicationContext
 from discord.ext import commands
 
-from app.callbacks import (
+from app.callbacks.infractor_callback import (
     bad_messages_menu_callback,
+    change_infractor_state_callback,
     link_filter_menu_callback,
     spam_detector_menu_callback,
 )
-from app.views import get_infractor_view
+from app.views.infractor_view import get_infractor_view
 
 
 class InfractorCog(commands.Cog):
@@ -37,6 +38,7 @@ class InfractorCog(commands.Cog):
         """
         view, infractor_embed = get_infractor_view(
             ctx,
+            change_infractor_state_callback,
             bad_messages_menu_callback,
             link_filter_menu_callback,
             spam_detector_menu_callback,

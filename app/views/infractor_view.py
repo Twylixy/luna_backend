@@ -5,12 +5,14 @@ from discord import Embed, Interaction
 from discord.commands import ApplicationContext
 from discord.ui import Button, View
 
-from app.helpers import EMBED_DEFAULT_COLOR, TextedInfractorSettings
-from app.models import InfractorSettingsModel
+from app.helpers.constants import EMBED_DEFAULT_COLOR
+from app.helpers.settings_to_text import TextedInfractorSettings
+from app.models.infractor_settings_model import InfractorSettingsModel
 
 
 def get_infractor_view(
     ctx: Union[ApplicationContext, Interaction],
+    change_infractor_state_callback: Awaitable[Interaction],
     bad_messages_menu_callback: Awaitable[Interaction],
     link_filter_menu_callback: Awaitable[Interaction],
     spam_detector_menu_callback: Awaitable[Interaction],
@@ -21,6 +23,7 @@ def get_infractor_view(
 
     Params:
         ctx: Union[ApplicationContext, Interaction]
+        change_infractor_state_callback: Awaitable[Interaction]
         bad_messages_menu_callback: Awaitable[Interaction]
         link_filter_menu_callback: Awaitable[Interaction]
         spam_detector_menu_callback: Awaitable[Interaction]
@@ -59,6 +62,17 @@ def get_infractor_view(
         .set_footer(text='The best way to control content')
     )
 
+    if infractor_settings.infractor_is_enabled is True:
+        change_infractor_state_button_label = 'Turn off'
+        change_infractor_state_button_style = discord.ButtonStyle.red
+    else:
+        change_infractor_state_button_label = 'Turn on'
+        change_infractor_state_button_style = discord.ButtonStyle.green
+
+    change_infractor_state_button = Button(
+        label=change_infractor_state_button_label,
+        style=change_infractor_state_button_style,
+    )
     bad_messages_button = Button(
         label='Bad Messages',
         style=discord.ButtonStyle.gray,
@@ -75,11 +89,13 @@ def get_infractor_view(
         emoji='🌊',
     )
 
+    change_infractor_state_button.callback = change_infractor_state_callback
     bad_messages_button.callback = bad_messages_menu_callback
     link_filter_button.callback = link_filter_menu_callback
     spam_detector_button.callback = spam_detector_menu_callback
 
     view = View(
+        change_infractor_state_button,
         bad_messages_button,
         link_filter_button,
         spam_detector_button,

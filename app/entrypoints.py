@@ -7,7 +7,9 @@ from discord.commands.context import ApplicationContext
 from discord.ext import commands
 from discord.ext.commands import Context
 
-from app.models import GuildModel, InfractorSettingsModel, UserModel
+from app.models.guild_model import GuildModel
+from app.models.infractor_settings_model import InfractorSettingsModel
+from app.models.user_model import UserModel
 
 intents = discord.Intents(messages=True, message_content=True)
 

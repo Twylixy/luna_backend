@@ -2,7 +2,7 @@ from os import environ
 
 import peewee
 
-from app.helpers import FailedToConnectToDatabaseException
+from app.helpers.exceptions import FailedToConnectToDatabaseException
 
 
 class BaseModel(peewee.Model):

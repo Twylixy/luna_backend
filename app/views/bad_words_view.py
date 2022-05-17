@@ -5,15 +5,16 @@ from discord import Embed, Interaction
 from discord.commands import ApplicationContext
 from discord.ui import Button, View
 
-from app.helpers import EMBED_DEFAULT_COLOR, TextedInfractorSettings
-from app.models import InfractorSettingsModel
+from app.helpers.constants import EMBED_DEFAULT_COLOR
+from app.helpers.settings_to_text import TextedInfractorSettings
+from app.models.infractor_settings_model import InfractorSettingsModel
 
 
 def get_bad_words_view(
     ctx: Union[ApplicationContext, Interaction],
     change_bad_words_state_callback: Awaitable[Interaction],
-    edit_bad_words_callback: Awaitable[Interaction],
-    back_to_infractor_callback: Awaitable[Interaction],
+    configure_bad_words_callback: Awaitable[Interaction],
+    to_infractor_callback: Awaitable[Interaction],
     infractor_settings: Optional[InfractorSettingsModel] = None,
 ) -> Tuple[View, Embed]:
     """
@@ -22,8 +23,8 @@ def get_bad_words_view(
     Params:
         interaction: Union[ApplicationContext, Interaction]
         change_bad_words_state_callback: Awaitable[Interaction]
-        edit_bad_words_callback: Awaitable[Interaction]
-        back_to_infractor_callback: Awaitable[Interaction]
+        configure_bad_words_callback: Awaitable[Interaction]
+        to_infractor_callback: Awaitable[Interaction]
         infractor_settings: Optional[InfractorSettingsModel]
     """
 
@@ -66,17 +67,19 @@ def get_bad_words_view(
         label=change_bad_words_state_button_label,
         style=change_bad_words_state_button_style,
     )
-    edit_bad_words_button = Button(label='Edit words', style=discord.ButtonStyle.gray)
-    back_to_infractor_button = Button(label='Back', style=discord.ButtonStyle.gray)
+    configure_bad_words_button = Button(
+        label='Configure', style=discord.ButtonStyle.gray
+    )
+    to_infractor_button = Button(label='Back', style=discord.ButtonStyle.gray)
 
     change_bad_words_state_button.callback = change_bad_words_state_callback
-    edit_bad_words_button.callback = edit_bad_words_callback
-    back_to_infractor_button.callback = back_to_infractor_callback
+    configure_bad_words_button.callback = configure_bad_words_callback
+    to_infractor_button.callback = to_infractor_callback
 
     view = View(
         change_bad_words_state_button,
-        edit_bad_words_button,
-        back_to_infractor_button,
+        configure_bad_words_button,
+        to_infractor_button,
     )
 
     return view, bad_messages_menu_embed
