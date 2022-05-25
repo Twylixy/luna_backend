@@ -9,8 +9,6 @@ license = "MIT"
 python = "^3.9"
 peewee = "^3.14.10"
 psycopg2 = "^2.9.3"
-Django = "^4.0.4"
-djangorestframework = "^3.13.1"
 py-cord = {git = "https://github.com/Pycord-Development/pycord"}
 
 [tool.poetry.dev-dependencies]

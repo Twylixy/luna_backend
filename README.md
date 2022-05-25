@@ -1,4 +1,4 @@
-# @luna_bot (Develop branch)
+# @luna_bot
 The Discord bot for Dusked Ocean Discord Server ([link](https://discord.gg/8rNYvSnR7c))
 
 ## Requirements
