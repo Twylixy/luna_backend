@@ -2,7 +2,7 @@
 FROM python:3.9.8-alpine3.14
 
 # Set workdir
-WORKDIR /usr/src/luna_bot
+WORKDIR /usr/src/luna_api
 
 # Env vars
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -19,8 +19,8 @@ COPY . .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.dev.txt
 
-RUN sed -i 's/\r$//g' /usr/src/luna_bot/docker/app/entrypoint.dev.sh
-RUN chmod +x /usr/src/luna_bot/docker/app/entrypoint.dev.sh
+RUN sed -i 's/\r$//g' /usr/src/luna_api/docker/api/entrypoint.dev.sh
+RUN chmod +x /usr/src/luna_api/docker/api/entrypoint.dev.sh
 
 # Entrypoint
-ENTRYPOINT ["/bin/sh", "/usr/src/luna_bot/docker/app/entrypoint.dev.sh"]
+ENTRYPOINT ["/bin/sh", "/usr/src/luna_api/docker/api/entrypoint.dev.sh"]

@@ -1,0 +1,55 @@
+# BUILDER 
+FROM python:3.9.8-alpine as builder
+
+# Set workdir
+WORKDIR /usr/src/luna_api
+
+# Set ENV vars
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Dependencies for psycopg2
+RUN apk update
+RUN apk add postgresql-dev gcc python3-dev musl-dev
+
+# Project dependencies
+COPY ./requirements.prod.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/luna_api/wheels -r requirements.prod.txt
+
+
+
+# IMAGE
+FROM python:3.9.8-alpine
+
+# Create app directory
+RUN mkdir -p /home/luna
+
+# Create app user
+RUN addgroup -S luna && adduser -S luna -G luna
+
+# Create dirs for project
+ENV PROJECT_HOME=/home/luna/luna_api/
+ENV API_HOME=/home/luna/luna_api/web/
+RUN mkdir -p $PROJECT_HOME
+WORKDIR $PROJECT_HOME
+
+# Copt project files
+COPY . .
+
+# Install project dependencies
+RUN apk update && apk add libpq
+COPY --from=builder /usr/src/luna_api/wheels /wheels
+RUN pip install --no-cache /home/luna/luna_api/wheels/*
+
+# Copy entrypoint.prod.sh
+RUN sed -i 's/\r$//g'  $PROJECT_HOME/docker/api/entrypoint.prod.sh
+RUN chmod +x  $PROJECT_HOME/docker/api/entrypoint.prod.sh
+
+# Chown for all files to the app user
+RUN chown -R luna:luna $PROJECT_HOME
+
+# Change user to app user
+USER luna
+
+# Entrypoint
+ENTRYPOINT ["/bin/sh", "/home/luna/luna_api/docker/api/entrypoint.prod.sh"]

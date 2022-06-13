@@ -44,3 +44,21 @@ MA_USERS_BLACKLIST - Users blacklist for message analyzer (array[int])
 ## # Docker Settings
 Those variables are required for Docker Compose.\
 **All of those variables required to be set.**
+
+## # Django Settings
+The following variables sets up Django
+```
+DJANGO_SECRET_KEY - Secret key for django (string)
+DJANGO_DEBUG - Debug mode (bool)
+DJANGO_ALLOWED_HOSTS - Allowed hosts for django (array[string])
+```
+### Database
+Variables for Django database connection
+```
+DJANGO_DATABASE_ENGINE - Database engine (string)
+DJANGO_DATABASE_NAME - Database name (string)
+DJANGO_DATABASE_USER - Database user (string)
+DJANGO_DATABASE_PASSWORD - Database password (string)
+DJANGO_DATABASE_HOST - Database host (string)
+DJANGO_DATABASE_PORT - Database port (int)
+```

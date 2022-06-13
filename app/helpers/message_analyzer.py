@@ -29,8 +29,8 @@ class MessageAnalyzer:
         """
         if (
             self.entity.mentions
-            or len(self.words) <= environ.get('MA_WORDS_COUNT', 3)
-            or self.length <= environ.get('MA_TEXT_LENGTH', 10)
+            or len(self.words) <= int(environ.get('MA_WORDS_COUNT', '3'))
+            or self.length <= int(environ.get('MA_TEXT_LENGTH', 10))
             or str(self.author_id) in environ.get('MA_USERS_BLACKLIST', '').split()
             or '\n' in self.text
         ):

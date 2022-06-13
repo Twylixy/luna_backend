@@ -1,23 +1,38 @@
 version: "3.9"
 services:
+  api:
+    build:
+      context: .
+      dockerfile: ./docker/api/Dockerfile.dev
+    container_name: api
+    volumes:
+      - ./web:/usr/src/luna_api/web
+    env_file: ./.env.dev
+    ports:
+      - 8080:8000
+    links:
+      - db:db
+    depends_on:
+      - db
+
   bot:
     build:
       context: .
       dockerfile: ./docker/app/Dockerfile.dev
     container_name: bot
     volumes:
-      - ./app:/usr/src/project/app
+      - ./app:/usr/src/luna_bot/app
     env_file: ./.env.dev
+    links:
+      - db:db
     depends_on:
-      - db
-  
-  db: 
+      - api
+
+  db:
     image: postgres:14.2
     container_name: postgres
     volumes:
-      - postgres_data:/var/lib/postgres/data/
+      - ./shared/postgres-data/:/var/lib/postgresql/data/
     env_file: ./.env.dev
-
-volumes:
-  postgres_data:
-    
+    ports:
+      - 127.0.0.1:5432:5432
