@@ -2,7 +2,7 @@
 The Discord bot for Dusked Ocean Discord Server ([link](https://discord.gg/8rNYvSnR7c))
 
 ## Requirements
-* Debian/Ubuntu (or container)
+* Debian/Ubuntu
 * Docker
 * Docker-compose
 * Poetry (Optional)
@@ -12,7 +12,7 @@ Clone repository
 ```bash
 $ git clone https://github.com/Twylixy/luna_bot.git
 ```
-(Optional) Install Poetry. Required for future dependencies updates.
+(Optional) Install Poetry.
 ```bash
 $ python3 -m pip install poetry
 ```
@@ -33,16 +33,6 @@ $ docker-compose -f docker-compose.prod.yml -p "luna" up --build -d
 ## Develop on Windows
 Before run the project make sure, that you've added environment variables to the project environment. \
 To add environment variables use that instructions:
-* Execute `poetry install`
+* Execute `poetry install` (if you didn't do that before)
 * Open `PROJECT_HOME\.venv\Scripts\activate.ps1`
-* Add all required variables. Example `$env:VAR_NAME=VALUE` 
-
-## On dependencies updates
-### Develope requirements.txt
-```bash
-$ poetry export --dev -f requirements.txt -o requirements.dev.txt
-```
-### Production requirements.txt
-```bash
-$ poetry export -f requirements.txt -o requirements.prod.txt
-```
+* Add all required variables from `.env(.prod|.dev)` file. Example `$env:VAR_NAME=VALUE` 

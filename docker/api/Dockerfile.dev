@@ -1,5 +1,5 @@
 # Pull image
-FROM python:3.9.8-alpine3.14
+FROM python:3.9.8-alpine
 
 # Set workdir
 WORKDIR /usr/src/luna_api
@@ -8,18 +8,16 @@ WORKDIR /usr/src/luna_api
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# Dependencies for psycopg2
-RUN apk update
-RUN apk add postgresql-dev gcc python3-dev musl-dev git
-
 # Copy project
 COPY . .
 
 # Project dependencies
-RUN pip install --upgrade pip
-RUN pip install -r requirements.dev.txt
+RUN apk update
+RUN apk add linux-headers postgresql-dev gcc make libpq python3-dev musl-dev libffi-dev curl git
+RUN python -m pip install poetry 
+RUN python -m poetry config virtualenvs.create false
+RUN python -m poetry install
 
-RUN sed -i 's/\r$//g' /usr/src/luna_api/docker/api/entrypoint.dev.sh
 RUN chmod +x /usr/src/luna_api/docker/api/entrypoint.dev.sh
 
 # Entrypoint
