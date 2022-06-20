@@ -1,4 +1,4 @@
-# @luna_bot (Backend) (Master branch)
+# @luna_bot (Backend) (Develop branch)
 The Discord bot for Dusked Ocean Discord Server ([link](https://discord.gg/8rNYvSnR7c))
 
 ## Requirements
@@ -17,7 +17,7 @@ $ git clone https://github.com/Twylixy/luna_backend.git
 $ python3 -m pip install poetry
 ```
 Configure **.env.dev.example** (or **.env.prod.example**) and remove **.example** tail.
-Detailed information about **.env** configurations is [here](https://github.com/Twylixy/luna_bot/blob/master/ENVFILES.md)
+Detailed information about **.env** configurations is [here](https://github.com/Twylixy/luna_bot/blob/develop/ENVFILES.md)
 
 ## Deploy
 **Note:** argument *-p* isn't required
