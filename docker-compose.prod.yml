@@ -1,11 +1,13 @@
 version: "3.9"
 services:
-  db:
+  database:
     image: postgres:14.2
-    container_name: postgres
+    container_name: database
     volumes:
-      - ./shared/postgres-data/:/var/lib/postgresql/data/
+      - ./shared/postgres-data-prod/:/var/lib/postgresql/data/
     env_file: ./.env.dev
+    networks:
+      - luna_network
 
   api:
     build:
@@ -14,7 +16,9 @@ services:
     container_name: api
     env_file: ./.env.prod
     depends_on:
-      - db
+      - database
+    networks:
+      - luna_network
 
   bot:
     build:
@@ -24,15 +28,24 @@ services:
     env_file: ./.env.prod
     depends_on:
       - api
+    networks:
+      - luna_network
 
-  nginx:
+  nginx_backend:
     build:
       context: .
       dockerfile: ./docker/nginx/Dockerfile.prod
-    container_name: nginx
+    container_name: nginx_backend
     env_file: ./.env.prod
     depends_on:
       - bot
     ports:
-      - 8080:80
-      - 8443:443
+      - 7080:80
+      - 7443:443
+    networks:
+      - luna_network
+
+networks:
+  luna_network:
+    driver: bridge
+    name: luna_network

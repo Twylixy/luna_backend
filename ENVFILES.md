@@ -1,10 +1,10 @@
-# Env configuration (Develop branch)
+# Env configuration (Master branch)
 The **.env** configuration files for the project are separated into 2 files (develop and production). Following explanainsion will help you to configure project.
 
 **Note:** for `bool` types available values is `0` and `1`
 **Note 2:** for `array[<type>]` set variables like: VAR=some some2 ...
 
-## # Bot Settings
+## Bot Settings
 ### Debug
 Configurations for **python logging**\
 You can leave them empty.
@@ -40,12 +40,14 @@ MA_WORDS_COUNT - Words count for message analyzer (int)
 MA_TEXT_LENGTH - Text length for message analyzer (int)
 MA_USERS_BLACKLIST - Users blacklist for message analyzer (array[int])
 ```
+--- 
 
-## # Docker Settings
+## Docker Settings
 Those variables are required for Docker Compose.\
 **All of those variables required to be set.**
 
-## # Django Settings
+---
+## Django Settings
 The following variables sets up Django
 ```
 DJANGO_SECRET_KEY - Secret key for django (string)

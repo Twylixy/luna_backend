@@ -4,10 +4,10 @@ services:
     image: postgres:14.2
     container_name: postgres
     volumes:
-      - ./shared/postgres-data/:/var/lib/postgresql/data/
+      - ./shared/postgres-data-dev/:/var/lib/postgresql/data/
     env_file: ./.env.dev
     ports:
-      - 127.0.0.1:5432:5432
+      - 5432:5432
 
   api:
     build:

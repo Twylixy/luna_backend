@@ -1,6 +1,10 @@
 # IMAGE
 FROM python:3.9.8-alpine
 
+# Env vars
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
 # Create app directory
 RUN mkdir -p /home/luna
 
