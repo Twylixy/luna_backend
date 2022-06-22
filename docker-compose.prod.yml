@@ -5,7 +5,7 @@ services:
     container_name: database
     volumes:
       - ./shared/postgres-data-prod/:/var/lib/postgresql/data/
-    env_file: ./.env.dev
+    env_file: ./.env.production
     networks:
       - luna_network
 
@@ -14,20 +14,9 @@ services:
       context: .
       dockerfile: ./docker/api/Dockerfile.prod
     container_name: api
-    env_file: ./.env.prod
+    env_file: ./.env.production
     depends_on:
       - database
-    networks:
-      - luna_network
-
-  bot:
-    build:
-      context: .
-      dockerfile: ./docker/app/Dockerfile.prod
-    container_name: bot
-    env_file: ./.env.prod
-    depends_on:
-      - api
     networks:
       - luna_network
 
@@ -36,9 +25,9 @@ services:
       context: .
       dockerfile: ./docker/nginx/Dockerfile.prod
     container_name: nginx_backend
-    env_file: ./.env.prod
+    env_file: ./.env.production
     depends_on:
-      - bot
+      - api
     ports:
       - 7080:80
       - 7443:443

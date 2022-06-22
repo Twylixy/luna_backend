@@ -1,4 +1,4 @@
-# @luna_bot (Backend) (Develop branch)
+# @luna_bot (Backend)
 The Discord bot for Dusked Ocean Discord Server ([link](https://discord.gg/8rNYvSnR7c))
 
 ## Requirements
@@ -16,8 +16,8 @@ $ git clone https://github.com/Twylixy/luna_backend.git
 ```bash
 $ python3 -m pip install poetry
 ```
-Configure **.env.dev.example** (or **.env.prod.example**) and remove **.example** tail.
-Detailed information about **.env** configurations is [here](https://github.com/Twylixy/luna_bot/blob/develop/ENVFILES.md)
+Configure **.env.example** and save as **.env.dev** or **.env.production**.
+Detailed information about **.env** configurations provided in **ENVFILES.md**
 
 ## Deploy
 **Note:** argument *-p* isn't required
@@ -25,7 +25,9 @@ Detailed information about **.env** configurations is [here](https://github.com/
 ```bash
 $ docker-compose -f docker-compose.dev.yml -p "luna_backend" up --build -d
 ```
+
 ### Production
+Before up the project in production, make sure that you've edit `./docker/nginx/nginx.conf` by editing `server_name` and providing ssl cert and key to `./ssl` folder with required names.
 ```bash
 $ docker-compose -f docker-compose.prod.yml -p "luna_backend" up --build -d
 ```

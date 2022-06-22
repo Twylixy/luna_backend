@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "luna_bot"
+name = "luna_backend"
 version = "0.1.0"
 description = "The Discord-bot for Dusked Ocean server."
 authors = ["Twylix <zemskov271@gmail.com>"]
@@ -7,9 +7,7 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-peewee = "^3.14.10"
 psycopg2 = "^2.9.3"
-py-cord = {git = "https://github.com/Pycord-Development/pycord"}
 Django = "^4.0.5"
 gunicorn = "^20.1.0"
 

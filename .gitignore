@@ -1,7 +1,8 @@
 .venv
 .vscode
-.env.prod
+.env.production
 .env.dev
 __pycache__
 
 shared/
+ssl/*

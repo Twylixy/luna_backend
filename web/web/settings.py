@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-from os import environ
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = environ.get('DJANGO_SECRET_KEY')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = DEBUG = int(environ.get('DJANGO_DEBUG', 1))
+DEBUG = int(os.environ.get('DJANGO_DEBUG', 1))
 
-ALLOWED_HOSTS = environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(' ')
 
 
 # Application definition
@@ -75,14 +75,16 @@ WSGI_APPLICATION = 'web.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+print('DATABASE HOST >>>>>>>>>>>>>>>>>', os.environ.get('DJANGO_DATABASE_HOST', 'NONE'))
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': environ.get('DJANGO_DATABASE_NAME', 'postgres'),
-        'USER': environ.get('DJANGO_DATABASE_USER', 'postgres'),
-        'PASSWORD': environ.get('DJANGO_DATABASE_PASSWORD', 'postgres'),
-        'HOST': environ.get('DJANGO_DATABASE_HOST', 'localhost'),
-        'PORT': environ.get('DJANGO_DATABASE_PORT', 5432),
+        'NAME': os.environ.get('DJANGO_DATABASE_NAME', 'postgres'),
+        'USER': os.environ.get('DJANGO_DATABASE_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DJANGO_DATABASE_PASSWORD', 'postgres'),
+        'HOST': os.environ.get('DJANGO_DATABASE_HOST', 'localhost'),
+        'PORT': os.environ.get('DJANGO_DATABASE_PORT', 5432),
     }
 }
 
