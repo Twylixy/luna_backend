@@ -23,13 +23,13 @@ Detailed information about **.env** configurations provided in **ENVFILES.md**
 **Note:** argument *-p* isn't required
 ### Develope
 ```bash
-$ docker-compose -f docker-compose.dev.yml -p "luna_backend" up --build -d
+$ docker-compose -f docker-compose.dev.yml -p "luna" up --build -d
 ```
 
 ### Production
 Before up the project in production, make sure that you've edit `./docker/nginx/nginx.conf` by editing `server_name` and providing ssl cert and key to `./ssl` folder with required names.
 ```bash
-$ docker-compose -f docker-compose.prod.yml -p "luna_backend" up --build -d
+$ docker-compose -f docker-compose.prod.yml -p "luna" up --build -d
 ```
 
 ## Develop on Windows
