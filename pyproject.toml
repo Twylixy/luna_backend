@@ -12,9 +12,9 @@ Django = "^4.0.6"
 gunicorn = "^20.1.0"
 
 [tool.poetry.dev-dependencies]
-black = "^22.3.0"
+black = "^22.6.0"
 isort = "^5.10.1"
-jurigged = "^0.5.0"
+wemake-python-styleguide = "^0.16.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -22,10 +22,10 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.isort]
 multi_line_output = 3
+skip_glob=[".venv/*", "docker/*", "shared/*", "ssl/*"]
 include_trailing_comma = true
-line_length = 79
 
 [tool.black]
 skip-string-normalization = true
-exclude = '(\.git|\.venv|\.vscode)'
-include_trailing_comma = true
+line-length = 79
+exclude = '(\.git|\.venv|\.vscode|\docker|\shared|\ssl)'

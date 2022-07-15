@@ -1,0 +1,14 @@
+[flake8]
+# D100 - ignore docstrings requirement in top of the modules
+# D105 - allow to leave magic methods without docstrings
+# D106 - ignore docstrings in nested classes
+# WPS305 - allow to use 'f' strings, but prefer to use 'str.format(...)'
+# WPS306 - drop "old python class format"
+ignore=D100, D105, D106, WPS305, WPS306
+
+# .venv/ - not contains python files
+# docker/ - not contains python files
+# ssl/ - not contains python files
+# web/web/settings.py - ignore Django's generated files
+# web/*/migrations/* - ignore generated migrations
+exclude=.venv/, docker/, ssl/, web/web/settings.py, web/*/migrations/*

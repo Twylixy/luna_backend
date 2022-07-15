@@ -5,4 +5,5 @@
 __pycache__
 
 shared/
-ssl/*
+cert.crt
+private.key

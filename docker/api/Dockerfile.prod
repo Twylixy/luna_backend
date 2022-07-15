@@ -12,12 +12,18 @@ RUN mkdir -p /home/luna
 RUN addgroup -S luna && adduser -S luna -G luna
 
 # Create dirs for project
-ENV PROJECT_HOME=/home/luna/luna_api/
-RUN mkdir -p $PROJECT_HOME
-WORKDIR $PROJECT_HOME
+ENV PROJECT_HOME=/home/luna/luna_api
+RUN mkdir -p ${PROJECT_HOME}
+WORKDIR ${PROJECT_HOME}
 
-# Copt project files
-COPY . .
+# Add project's files
+COPY ./docker/ ./docker/
+COPY ./web/ ./web/
+COPY ./poetry.lock .
+COPY ./pyproject.toml .
+
+# Copy entrypoint.prod.sh
+RUN chmod +x ${PROJECT_HOME}/docker/api/entrypoint.prod.sh
 
 # Install project dependencies
 RUN apk update
@@ -26,11 +32,8 @@ RUN python -m pip install poetry
 RUN python -m poetry config virtualenvs.create false
 RUN python -m poetry install --no-dev
 
-# Copy entrypoint.prod.sh
-RUN chmod +x $PROJECT_HOME/docker/api/entrypoint.prod.sh
-
 # Chown for all files to the app user
-RUN chown -R luna:luna $PROJECT_HOME
+RUN chown -R luna:luna ${PROJECT_HOME}
 
 # Change user to app user
 USER luna

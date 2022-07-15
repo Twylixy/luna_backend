@@ -2,8 +2,9 @@ from django.db import models
 
 
 class GuildModel(models.Model):
-    """Represents a guild model"""
+    """Represents a guild model."""
 
+    id = models.AutoField(primary_key=True)
     guild_id = models.BigIntegerField(null=False, blank=False, unique=True)
 
     class Meta:
@@ -15,7 +16,7 @@ class GuildModel(models.Model):
 
 
 class UserModel(models.Model):
-    """Represents a user model"""
+    """Represents a user model."""
 
     id = models.AutoField(primary_key=True)
     discord_id = models.BigIntegerField(null=False, blank=False, unique=True)
@@ -29,8 +30,9 @@ class UserModel(models.Model):
 
 
 class SavedMessageModel(models.Model):
-    """Represents a saved message model"""
+    """Represents a saved message model."""
 
+    id = models.AutoField(primary_key=True)
     text = models.TextField(null=False, blank=False)
     discord_id = models.ForeignKey(
         UserModel,
@@ -49,20 +51,37 @@ class SavedMessageModel(models.Model):
 
 
 class InfractorSettingsModel(models.Model):
-    """Represents infractor's bad words settings model"""
+    """Represents infractor's bad words settings model."""
 
+    id = models.AutoField(primary_key=True)
     guild_id = models.ForeignKey(
         GuildModel,
         on_delete=models.CASCADE,
         db_column='guild_id',
         to_field='guild_id',
     )
-    infractor_is_enabled = models.BooleanField(default=False, null=True, blank=True)
-    bad_words_is_enabled = models.BooleanField(default=False, null=True, blank=True)
+    infractor_is_enabled = models.BooleanField(
+        default=False,
+        null=True,
+        blank=True,
+    )
+    bad_words_is_enabled = models.BooleanField(
+        default=False,
+        null=True,
+        blank=True,
+    )
     bad_words_dictionary = models.TextField(null=True, blank=True)
-    link_filter_is_enabled = models.BooleanField(default=False, null=True, blank=True)
+    link_filter_is_enabled = models.BooleanField(
+        default=False,
+        null=True,
+        blank=True,
+    )
     link_filter_dictionary = models.TextField(null=True, blank=True)
-    spam_detector_is_enabled = models.BooleanField(default=False, null=True, blank=True)
+    spam_detector_is_enabled = models.BooleanField(
+        default=False,
+        null=True,
+        blank=True,
+    )
 
     class Meta:
         db_table = 'infractor_settings'

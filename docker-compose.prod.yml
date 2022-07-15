@@ -10,12 +10,9 @@ services:
       - luna_network
 
   api:
-    # Build from Dockerfile
-    # Note: comment `image`
-    #
-    # build:
-    #   context: .
-    #   dockerfile: ./docker/api/Dockerfile.prod
+    build:
+      context: .
+      dockerfile: ./docker/api/Dockerfile.prod
     image: twylix/luna_backend_api
     container_name: api
     env_file: ./.env.production
@@ -25,13 +22,9 @@ services:
       - luna_network
 
   nginx_backend:
-    # Build from Dockerfile
-    # Note: comment `image`
-    #
-    # build:
-    #   context: .
-    #   dockerfile: ./docker/nginx/Dockerfile.prod
-    image: twylix/luna_backend_nginx
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile.prod
     container_name: nginx_backend
     env_file: ./.env.production
     depends_on:
