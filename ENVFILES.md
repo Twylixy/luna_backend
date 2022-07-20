@@ -5,11 +5,11 @@ The **.env** configuration files for the project are separated into 2 files (dev
 **Note 2:** for `array[<type>]` set variables like: VAR=some some2 ...
 
 ## Docker Settings
-Those variables are required for Docker Compose.\
-**All of those variables required to be set.**
+Variables for Docker Compose.\
 
 ### Database
-Variables for Docker's database container
+Variables for Docker's database container \
+**POSTGRES_PASSWORD** required
 ```
 POSTGRES_USER - Database user (string)
 POSTGRES_PASSWORD - User's password (string)

@@ -16,7 +16,7 @@ RUN apk update
 RUN apk add postgresql-dev gcc libpq python3-dev musl-dev libffi-dev
 RUN python -m pip install poetry
 RUN python -m poetry config virtualenvs.create false
-RUN python -m poetry install
+RUN python -m poetry install --no-dev
 
 RUN chmod +x /usr/src/luna_api/docker/api/entrypoint.dev.sh
 
