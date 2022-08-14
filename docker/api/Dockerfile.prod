@@ -4,9 +4,11 @@ FROM python:3.9.8-alpine
 # Env vars
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV PROJECT_STATIC_ROOT=/var/www/luna.staypony.space/static
 
 # Create app directory
 RUN mkdir -p /home/luna
+RUN mkdir -p ${PROJECT_STATIC_ROOT}
 
 # Create app user
 RUN addgroup -S luna && adduser -S luna -G luna
@@ -27,13 +29,14 @@ RUN chmod +x ${PROJECT_HOME}/docker/api/entrypoint.prod.sh
 
 # Install project dependencies
 RUN apk update
-RUN apk add postgresql-dev gcc libpq python3-dev musl-dev libffi-dev
-RUN python -m pip install poetry 
+RUN apk add postgresql-dev gcc musl-dev curl
+RUN python -m pip install poetry
 RUN python -m poetry config virtualenvs.create false
 RUN python -m poetry install --no-dev
 
 # Chown for all files to the app user
 RUN chown -R luna:luna ${PROJECT_HOME}
+RUN chown -R luna:luna ${PROJECT_STATIC_ROOT}
 
 # Change user to app user
 USER luna

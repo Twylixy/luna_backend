@@ -1,8 +1,9 @@
+from api.values import HTTPResponseCode
 from django.core.handlers.wsgi import WSGIRequest
 from django.http.response import HttpResponse
 
 
-def root_api_view(request: WSGIRequest) -> HttpResponse:
+def routes_root_view(request: WSGIRequest) -> HttpResponse:
     """
     Process the api root page.
 
@@ -12,4 +13,7 @@ def root_api_view(request: WSGIRequest) -> HttpResponse:
     Returns:
         HttpResponse
     """
-    return HttpResponse('Forbidden (403)', status=403)
+    return HttpResponse(
+        '404 Not Found',
+        status=HTTPResponseCode.not_found,
+    )

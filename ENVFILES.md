@@ -1,49 +1,143 @@
-# Env configuration
+Env configuration
+---
 The **.env** configuration files for the project are separated into 2 files (develop and production). Following explanainsion will help you to configure project.
 
-**Note:** for `bool` types available values is `0` and `1`
-**Note 2:** for `array[<type>]` set variables like: VAR=some some2 ...
+**Note:** for `bool` types valid values is `0` and `1` \
+**Note 2:** for `array[<type>]` set variables like: VAR=some some2 ... \
 
-## Docker Settings
-Variables for Docker Compose.\
+# Docker Settings
+Variables for Docker Compose.
 
-### Database
-Variables for Docker's database container \
-**POSTGRES_PASSWORD** required
-```
-POSTGRES_USER - Database user (string)
-POSTGRES_PASSWORD - User's password (string)
-POSTGRES_DB - Database name (string)
-```
+## Database
+Variables for Docker's database container
 
-### Nginx
+`POSTGRES_USER` \
+**Type**: *string* \
+**Required**: *False* \
+Docker's PostgreSQL container database user.
+
+`POSTGRES_PASSWORD` \
+**Type**: *string* \
+**Required**: *True* \
+Docker's PostgreSQL container database password.
+
+`POSTGRES_DB` \
+**Type**: *string* \
+**required**: *False* \
+Docker's PostgreSQL container database name. 
+
+## Nginx
 Variables for Docker's Nginx container
-```
-SERVER_NAME - server_name derective (string) 
-SERVER_LISTEN_HTTP_PORT - listening http port (string)
-SERVER_LISTEN_HTTPS_PORT - listening http**s** port (string)
-HTTPS_PROXY_PASS_PORT - specifies proxy pass port to https (string with ':', ex HTTPS_PROXY_PASS_PORT=:7443)
-API_HOST=api:8000 - api host for upstream derective (string)
-```
-**Note**: `HTTPS_PROXY_PASS_PORT` is the variable that is required if you don't use Proxy services, like Cloudflare, otherwise you must leave this value blank or `proxy_pass` will not work at all.
+
+`SERVER_NAME` \
+**Type**: *string* \
+**Required**: *True* \
+Value for **server_name** derective in **nginx.conf**
+
+`SERVER_LISTEN_HTTP_PORT` \
+**Type**: *integer* \
+**Required**: *True* \
+Port for HTTP **listen** derective in **nginx.conf**
+
+`SERVER_LISTEN_HTTPS_PORT` \
+**Type**: *integer* \
+**Required**: *True* \
+Port for HTTPS **listen** derective in **nginx.conf**
+
+`HTTPS_PROXY_PASS_PORT` \
+**Type**: *string* \
+**Required**: *False* \
+**Exapmle**: *HTTPS_PROXY_PASS_PORT=:7443* \
+Port for redirect from HTTP to HTTPS, if you don't have to define port, for example you're using proxy server (Cloudflare or simillar), then you can leave it empty, otherwise, specify port with **:** 
+
+`API_HOST` \
+**Type**: *string* \
+**Required**: *True* \
+**Exapmle**: *API_HOST=api:8000* \
+Host of api. In example defined api container (by its name) and port, that Django is listening
+
+`FRONTEND_HOST` \
+**Type**: *string* \
+**Required**: *True* \
+**Exapmle**: *FRONTEND_HOST=frontend:3000* \
+Host of frontend. In example defined frontend container (by its name) and port, that Nuxt is listening
+
+`CORS_ALLOWED_ORIGINS` \
+**Type**: *array[string]* \
+**Required**: *False* \
+**Exapmle**: *CORS_ALLOWED_ORIGINS=https://localhost:7443 https://localhost:3000 http://localhost:7080 http://localhost:3000* \
+Allowed domains, that can read and request to api from browser \
+**Note**: CORS settings required only if you've different origins. For example, you've run frontend at example.com and backend on api.example.com, you are need to set CORS_ALLOWED_ORIGINS=*.example.com, otherwise leave it the same
+
+`CORS_ALLOWED_METHODS` \
+**Type**: *array[string]* \
+**Required**: *False* \
+**Exapmle**: *CORS_ALLOWED_METHODS=GET, POST, OPTIONS, PUT, DELETE* \
+Methods, that allowed for CORS requests
 
 ---
 <br>
 
-## Django Settings
+# Django Settings
 The following variables sets up Django
-```
-DJANGO_SECRET_KEY - Secret key for django (string)
-DJANGO_DEBUG - Debug mode (bool)
-DJANGO_ALLOWED_HOSTS - Allowed hosts for django (array[string])
-```
-### Database
+
+`DJANGO_SECRET_KEY` \
+**Type**: *string* \
+**Required**: *True* \
+Secret key for django
+
+`DJANGO_DEBUG` \
+**Type**: *bool* \
+**Required**: *False* \
+Debug mode for django
+
+`DJANGO_ALLOWED_HOSTS` \
+**Type**: *array[string]* \
+**Required**: *False* \
+Allowed hosts for django
+
+## Database
 Variables for Django database connection
-```
-DJANGO_DATABASE_ENGINE - Database engine (string)
-DJANGO_DATABASE_NAME - Database name (string)
-DJANGO_DATABASE_USER - Database user (string)
-DJANGO_DATABASE_PASSWORD - Database password (string)
-DJANGO_DATABASE_HOST - Database host (string)
-DJANGO_DATABASE_PORT - Database port (int)
-```
+
+`DJANGO_DATABASE_HOST` \
+**Type**: *string* \
+**Required**: *True* \
+Database host
+
+`DJANGO_DATABASE_PORT` \
+**Type**: *integer* \
+**Required**: *False* \
+Database port
+
+## API
+Variables for project's API
+
+`DISCORD_ENDPOINT` \
+**Type**: *string* \
+**Required**: *False* \
+Discord API endpoint
+
+`CLIENT_ID` \
+**Type**: *integer* \
+**Required**: *True* \
+Discord API client ID
+
+`CLIENT_SECRET` \
+**Type**: *string* \
+**Required**: *True* \
+Discord API client secret
+
+`TOKEN_LENGTH` \
+**Type**: *int* \
+**Required**: *False* \
+Token length
+
+`SWAGGER_URL` \
+**Type**: *string* \
+**Required**: *True* \
+Swagger's schema URL
+
+`SWAGGER_CONTACT_EMAIL`
+**Type**: *string* \
+**Required**: *False* \
+Swagger's schema contact email
