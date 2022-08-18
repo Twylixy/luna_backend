@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta
 
-from api.authentication import BearerAuthentication
+from api.entities.authentication import BearerAuthentication
 from api.helpers.authorization import get_authorization_token
 from api.helpers.discord import get_user_guilds, refresh_oauth2_credentials
-from api.models import TokensModel, UserModel
+from api.models import TokensModel
 from api.requests.discord.get_guilds_request import GetGuildsRequest
 from api.responses.discord.get_guilds_response import GetGuildsResponse
 from api.responses.error_response import ErrorResponse

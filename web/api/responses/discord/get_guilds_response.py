@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import List
 
-from api.helpers.discord import DiscordServer
+from api.entities.discord import DiscordServer
 from api.responses.base_response import BaseResponse
 from drf_yasg.openapi import Response, Schema
 

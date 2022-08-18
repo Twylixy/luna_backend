@@ -3,34 +3,7 @@ from typing import List, Optional, Tuple
 
 import requests
 from api.values import DiscordPermission as Dp
-from pydantic import BaseModel
-
-
-class OAuth2Credentials(BaseModel):
-    """Represents oauth2 credentials."""
-
-    access_token: str
-    token_type: str
-    expires_in: int
-    refresh_token: str
-    scope: str
-
-
-class DiscordUser(BaseModel):
-    """Represents discord user."""
-
-    id: int
-    username: str
-    email: str
-
-
-class DiscordServer(BaseModel):
-    """Represents Discord server."""
-
-    id: int
-    name: str
-    icon: str
-    permissions: int
+from api.entities.discord import OAuth2Credentials, DiscordUser, DiscordServer
 
 
 def get_oauth2_credentials(
@@ -42,6 +15,7 @@ def get_oauth2_credentials(
 
     Args:
         discord_code: str
+        redirect_uri: str
     Returns:
         Optional[OAuth2Credentials]
     """
