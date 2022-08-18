@@ -21,7 +21,6 @@ from rest_framework.decorators import api_view
     request_body=DiscordAuthRequest.get_request_schema(),
     responses={
         HTTPResponseCode.ok: DiscordAuthResponse.get_response_schema(),
-        HTTPResponseCode.method_not_allowed: ErrorResponse.get_response_schema(),
         HTTPResponseCode.bad_request: ErrorResponse.get_response_schema(),
     },
 )

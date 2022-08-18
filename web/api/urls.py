@@ -3,6 +3,7 @@ import os
 from api.routes.auth.discord import auth_discord_view
 from api.routes.root import routes_root_view
 from api.routes.status.healthcheck import test_healthcheck_view
+from api.routes.discord.get_guilds import get_guilds_view
 from django.urls import path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
@@ -26,4 +27,5 @@ urlpatterns = [
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0)),
     path('status/healthcheck/', test_healthcheck_view),
     path('auth/discord/', auth_discord_view),
+    path('discord/get_guilds/', get_guilds_view),
 ]
