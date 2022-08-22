@@ -2,8 +2,8 @@ import os
 from typing import List, Optional, Tuple
 
 import requests
+from api.entities.discord import DiscordServer, DiscordUser, OAuth2Credentials
 from api.values import DiscordPermission as Dp
-from api.entities.discord import OAuth2Credentials, DiscordUser, DiscordServer
 
 
 def get_oauth2_credentials(

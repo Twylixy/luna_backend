@@ -8,4 +8,4 @@ from pydantic import BaseModel
 class BaseResponse(BaseModel):
     """Represents a base response."""
 
-    status: Literal['success', 'failure']
+    status: Literal['success']

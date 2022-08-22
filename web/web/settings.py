@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'drf_yasg',
+    'drf_spectacular',
     'api.apps.ApiConfig',
 ]
 
@@ -131,10 +131,30 @@ STATIC_ROOT = '/var/www/luna.staypony.space/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'api.entities.authentication.BearerAuthentication',
+    ],
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Luna API',
+    'DESCRIPTION': 'The API backend service for Luna bot',
+    'VERSION': 'v1',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'CONTACT': {
+        'email': os.getenv('SWAGGER_CONTACT_EMAIL'),
+    },
+    'LICENSE': {
+        'name': 'BSD License',
+    },
+}
+
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
         'Bearer': {
-            'type': 'apiKey',
+            'type': 'Bearer Token',
             'name': 'Authorization',
             'in': 'header',
         },

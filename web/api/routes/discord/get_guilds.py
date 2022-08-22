@@ -10,16 +10,15 @@ from api.responses.error_response import ErrorResponse
 from api.values import HTTPResponseCode
 from django.core.handlers.wsgi import WSGIRequest
 from django.http.response import JsonResponse
-from drf_yasg.utils import swagger_auto_schema
+from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import api_view, authentication_classes
 
 
-@swagger_auto_schema(
-    method='post',
-    request_body=GetGuildsRequest.get_request_schema(),
+@extend_schema(
+    request={'application/json': GetGuildsRequest.schema()},
     responses={
-        HTTPResponseCode.ok: GetGuildsResponse.get_response_schema(),
-        HTTPResponseCode.bad_request: ErrorResponse.get_response_schema(),
+        HTTPResponseCode.ok: GetGuildsResponse.schema(),
+        HTTPResponseCode.bad_request: ErrorResponse.schema(),
     },
 )
 @authentication_classes([BearerAuthentication])

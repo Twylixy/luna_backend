@@ -1,7 +1,7 @@
-from api.requests.base_request import BaseRequest
+from pydantic import BaseModel
 
 
-class DiscordAuthRequest(BaseRequest):
+class DiscordAuthRequest(BaseModel):
     """Represents discord auth request."""
 
     code: str

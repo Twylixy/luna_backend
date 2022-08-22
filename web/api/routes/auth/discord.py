@@ -11,17 +11,16 @@ from api.responses.error_response import ErrorResponse
 from api.values import HTTPResponseCode
 from django.core.handlers.wsgi import WSGIRequest
 from django.http.response import JsonResponse
-from drf_yasg.utils import swagger_auto_schema
+from drf_spectacular.utils import extend_schema
 from pydantic import ValidationError
 from rest_framework.decorators import api_view
 
 
-@swagger_auto_schema(
-    method='post',
-    request_body=DiscordAuthRequest.get_request_schema(),
+@extend_schema(
+    request={'application/json': DiscordAuthRequest.schema()},
     responses={
-        HTTPResponseCode.ok: DiscordAuthResponse.get_response_schema(),
-        HTTPResponseCode.bad_request: ErrorResponse.get_response_schema(),
+        HTTPResponseCode.ok: DiscordAuthResponse.schema(),
+        HTTPResponseCode.bad_request: ErrorResponse.schema(),
     },
 )
 @api_view(['POST'])
@@ -51,7 +50,7 @@ def auth_discord_view(request: WSGIRequest) -> JsonResponse:
     if discord_auth_request.code == 'test':
         response = {
             'status': 'success',
-            'token': 'there will be token',
+            'token': 'there will be a token',
         }
 
         return JsonResponse(

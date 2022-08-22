@@ -1,29 +1,11 @@
 from __future__ import annotations
 
-from api.responses.base_response import BaseResponse
-from drf_yasg.openapi import Response, Schema
+from pydantic import BaseModel
+from typing import Literal
 
 
-class ErrorResponse(BaseResponse):
+class ErrorResponse(BaseModel):
     """Represents an error response."""
 
+    status: Literal['failure']
     message: str
-
-    @classmethod
-    def get_response_schema(cls: ErrorResponse) -> Response:
-        """
-        Return schema of response.
-
-        Returns:
-            Response
-        """
-        return Response(
-            description='Error response',
-            schema=Schema(**cls.schema()),
-            examples={
-                'application/json': {
-                    'code': 'somecode',
-                    'redirect_uri': 'https://example.com/',
-                },
-            },
-        )

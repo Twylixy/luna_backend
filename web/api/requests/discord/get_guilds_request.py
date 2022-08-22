@@ -1,5 +1,5 @@
-from api.requests.base_request import BaseRequest
+from pydantic import BaseModel
 
 
-class GetGuildsRequest(BaseRequest):
+class GetGuildsRequest(BaseModel):
     """Represents discord auth request."""
