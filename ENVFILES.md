@@ -54,7 +54,7 @@ Port for redirect from HTTP to HTTPS, if you don't have to define port, for exam
 **Type**: *string* \
 **Required**: *True* \
 **Exapmle**: *API_HOST=api:8000* \
-Host of api. In example defined api container (by its name) and port, that Django is listening
+Host of api. In example defined api container (by its name) and port, that Uvicorn is listening
 
 `FRONTEND_HOST` \
 **Type**: *string* \
@@ -78,33 +78,18 @@ Methods, that allowed for CORS requests
 ---
 <br>
 
-# Django Settings
+# FastAPI Settings
 The following variables sets up Django
-
-`DJANGO_SECRET_KEY` \
-**Type**: *string* \
-**Required**: *True* \
-Secret key for django
-
-`DJANGO_DEBUG` \
-**Type**: *bool* \
-**Required**: *False* \
-Debug mode for django
-
-`DJANGO_ALLOWED_HOSTS` \
-**Type**: *array[string]* \
-**Required**: *False* \
-Allowed hosts for django
 
 ## Database
 Variables for Django database connection
 
-`DJANGO_DATABASE_HOST` \
+`POSTGRES_HOST` \
 **Type**: *string* \
 **Required**: *True* \
 Database host
 
-`DJANGO_DATABASE_PORT` \
+`POSTGRES_PORT` \
 **Type**: *integer* \
 **Required**: *False* \
 Database port
@@ -131,13 +116,3 @@ Discord API client secret
 **Type**: *int* \
 **Required**: *False* \
 Token length
-
-`SWAGGER_URL` \
-**Type**: *string* \
-**Required**: *True* \
-Swagger's schema URL
-
-`SWAGGER_CONTACT_EMAIL`
-**Type**: *string* \
-**Required**: *False* \
-Swagger's schema contact email

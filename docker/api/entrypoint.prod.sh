@@ -1,12 +1,9 @@
 #!/bin/sh
 
-echo "Apply database migrations"
-python ./web/manage.py migrate
+echo "Run migrations"
+alembic upgrade head
 
-echo "Collect static files"
-python ./web/manage.py collectstatic --no-input
-
-echo "Starting server"
-gunicorn --access-logfile /home/luna/gunicorn/access.log --bind 0.0.0.0:8000 --chdir ./web web.wsgi:application
+echo "Starting app..."
+uvicorn api.main:app --host 0.0.0.0 --port 8000
 
 exec "$@"

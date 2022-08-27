@@ -30,9 +30,10 @@ $ docker-compose -f docker-compose.dev.yml -p "luna" up --build -d
 ```
 
 ### Production
-Before up the project in production, make sure that you've edit `./docker/nginx/nginx.conf` by editing `server_name` and providing ssl cert and key to `./ssl` folder with required names.
+Before up the project in production, make sure that you've edit `./docker/nginx/nginx.conf` and provide ssl cert (`cert.crt`) and key (`private.key`) to `./ssl` folder.
 ```bash
-$ docker-compose -f docker-compose.prod.yml -p "luna" up --build -d
+$ docker-compose -f docker-compose.prod.yml -p "luna" pull
+$ docker-compose -f docker-compose.prod.yml -p "luna" up -d
 ```
 
 ## Develop on Windows

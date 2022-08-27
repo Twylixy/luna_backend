@@ -23,9 +23,6 @@ services:
     container_name: api
     env_file: ./.env.production
     restart: on-failure:3
-    volumes:
-      - backend_static:/var/www/luna.staypony.space/static/
-      - ./shared/gunicord/:/home/luna/gunicorn/
     depends_on:
       database:
         condition: service_healthy
@@ -54,17 +51,11 @@ services:
     depends_on:
       api:
         condition: service_healthy
-    volumes:
-      - backend_static:/var/www/luna.staypony.space/static
     ports:
       - 7080:80
       - 7443:443
     networks:
       - luna_network
-
-volumes:
-  backend_static:
-
 
 networks:
   luna_network:
