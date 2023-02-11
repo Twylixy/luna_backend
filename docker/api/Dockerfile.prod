@@ -1,5 +1,5 @@
 # IMAGE
-FROM python:3.9.8-buster
+FROM python:3.11-buster
 
 # Env vars
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -28,7 +28,7 @@ COPY ./pyproject.toml .
 COPY ./alembic.ini .
 
 # Copy entrypoint.prod.sh
-RUN chmod +x ${PROJECT_HOME}/docker/api/entrypoint.prod.sh
+RUN chmod +x ${PROJECT_HOME}/docker/api/entrypoint.prod.bash
 
 # Install project dependencies
 RUN apt update
@@ -45,4 +45,4 @@ RUN chown -R luna:luna ${PROJECT_STATIC_ROOT}
 USER luna
 
 # Entrypoint
-ENTRYPOINT ["/bin/sh", "/home/luna/luna_api/docker/api/entrypoint.prod.sh"]
+ENTRYPOINT ["/bin/sh", "/home/luna/luna_api/docker/api/entrypoint.prod.bash"]

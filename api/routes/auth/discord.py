@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 import os
 import secrets
 from typing import Union
@@ -6,20 +7,13 @@ from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
-from api.database.crud import (
-    create_token,
-    create_user,
-    get_token_by_discord_id,
-    get_user_by_discord_id,
-    update_token,
-    update_user,
-)
 from api.database.engine import get_session
+from api.database.models import TokenModel, UserModel
 from api.entities.http import HTTPResponseCode
 from api.requests.auth.discord import DiscordAuthRequest
 from api.responses.auth.discord import DiscordAuthResponse
 from api.responses.error import ErrorResponse
-from api.services.discord import get_discord_user, get_oauth2_credentials
+from api.services import discord
 
 router = APIRouter(prefix='/api/auth', tags=['auth'])
 
@@ -31,10 +25,10 @@ router = APIRouter(prefix='/api/auth', tags=['auth'])
         HTTPResponseCode.bad_request: {'model': ErrorResponse},
     },
 )
-def discord_auth(
+async def discord_auth(
     request: DiscordAuthRequest,
     session: Session = Depends(get_session),
-) -> Union[DiscordAuthResponse, ErrorResponse]:
+) -> Union[DiscordAuthResponse, JSONResponse]:
     """
     Process discord oauth2 discord auth request.
 
@@ -43,74 +37,66 @@ def discord_auth(
     Returns:
       Union[DiscordAuthResponse, ErrorResponse]
     """
-    oauth2_credentials = get_oauth2_credentials(
+    oauth2_credentials = await discord.get_oauth2_credentials(
         request.code,
         request.redirect_uri,
     )
 
     if oauth2_credentials is None:
-        response = {
-            'status': 'failure',
-            'message': 'unable to get oauth2 credentials',
-        }
-
         return JSONResponse(
             status_code=HTTPResponseCode.bad_request,
-            content=ErrorResponse.parse_obj(response).dict(),
+            content=ErrorResponse(
+                status='failure',
+                message='unable to get oauth2 credentials',
+            ).dict(),
         )
 
-    discord_user = get_discord_user(oauth2_credentials.access_token)
+    discord_user = await discord.get_discord_user(oauth2_credentials.access_token)
 
     if discord_user is None:
-        response = {
-            'status': 'failure',
-            'message': 'unable to get user from discord',
-        }
-
         return JSONResponse(
             status_code=HTTPResponseCode.bad_request,
-            content=ErrorResponse.parse_obj(response).dict(),
+            content=ErrorResponse(
+                status='failure',
+                message='unable to get user from discord',
+            ).dict(),
         )
 
-    user_object = get_user_by_discord_id(session, discord_user.id)
-    token_object = get_token_by_discord_id(session, discord_user.id)
+    user_object = (
+        session.query(UserModel).filter(UserModel.discord_id == discord_user.id).first()
+    )
+    token_object = (
+        session.query(TokenModel).filter(TokenModel.discord_id == discord_user.id).first()
+    )
     bearer_token = secrets.token_hex(
         int(os.getenv('TOKEN_LENGTH', '32')),
     )
 
     if user_object is None:
-        user_object = create_user(
-            session,
-            discord_user.id,
-            discord_user.email,
-        )
+        user_object = UserModel(discord_id=discord_user.id, email=discord_user.email)
+        session.add(user_object)
+        session.commit()
     else:
-        update_user(
-            session,
-            user_object.id,
-            user_object.email,
-        )
+        user_object.email = discord_user.email
+        session.refresh(user_object)
 
     if token_object is None:
-        token_object = create_token(
-            session,
-            discord_user.id,
-            bearer_token,
-            oauth2_credentials.access_token,
-            oauth2_credentials.refresh_token,
+        token_object = TokenModel(
+            discord_id=discord_user.id,
+            bearer_token=bearer_token,
+            access_token=oauth2_credentials.access_token,
+            refresh_token=oauth2_credentials.refresh_token,
         )
+        session.add(token_object)
+        session.commit()
     else:
-        update_token(
-            session,
-            user_object.id,
-            bearer_token,
-            oauth2_credentials.access_token,
-            oauth2_credentials.refresh_token,
-        )
+        token_object.bearer_token = bearer_token
+        token_object.access_token = oauth2_credentials.access_token
+        token_object.refresh_token = oauth2_credentials.refresh_token
+        token_object.expires = datetime.now() + timedelta(seconds=604800)
+        session.refresh(token_object)
 
-    response = {
-        'status': 'success',
-        'token': token_object.bearer_token,
-    }
-
-    return DiscordAuthResponse.parse_obj(response).dict()
+    return DiscordAuthResponse(
+        status='success',
+        token=token_object.bearer_token,
+    )

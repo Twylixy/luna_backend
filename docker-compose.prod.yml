@@ -4,14 +4,14 @@ services:
     restart: on-failure:3
     container_name: database
     volumes:
-      - ./shared/postgres-data-prod/:/var/lib/postgresql/data/
+      - db_volume:/var/lib/postgresql/data/
     env_file: ./.env.production
     healthcheck:
       test: [ "CMD", "pg_isready" ]
       interval: 5s
       timeout: 5s
       retries: 3
-      start_period: 5s
+      start_period: 10s
     networks:
       - luna_network
 
@@ -32,12 +32,12 @@ services:
           "CMD",
           "curl",
           "-f",
-          "http://localhost:8000/api/status/healthcheck/"
+          "http://localhost:8000/api/status/healthcheck"
         ]
       interval: 5s
       timeout: 5s
       retries: 5
-      start_period: 5s
+      start_period: 10s
     networks:
       - luna_network
 
@@ -56,6 +56,10 @@ services:
       - 7443:443
     networks:
       - luna_network
+
+volumes:
+  db_volume:
+
 
 networks:
   luna_network:

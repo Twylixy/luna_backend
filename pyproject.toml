@@ -1,35 +1,44 @@
 [tool.poetry]
-name = "luna_backend"
+name = "luna-backend"
 version = "0.1.0"
 description = "The Discord-bot for Dusked Ocean server."
 authors = ["Twylix <zemskov271@gmail.com>"]
 license = "MIT"
+readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.11"
 requests = "^2.28.1"
 pydantic = "^1.9.1"
 psycopg2 = "^2.9.3"
 fastapi = "^0.79.1"
 uvicorn = {extras = ["standard"], version = "^0.18.2"}
-SQLAlchemy = "^1.4.40"
 alembic = "^1.8.1"
+aiohttp = "^3.8.1"
+sqlalchemy = {extras = ["mypy"], version = "^2.0.3"}
 
-[tool.poetry.dev-dependencies]
-black = "^22.6.0"
-isort = "^5.10.1"
-wemake-python-styleguide = "^0.16.1"
+[tool.poetry.group.lint.dependencies]
+mypy = "^1.0.0"
+isort = "^5.12.0"
+black = "^23.1.0"
+
+[tool.poetry.group.debug.dependencies]
+debugpy = "^1.6.3"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.isort]
 multi_line_output = 3
-skip_glob=[".venv/*", "docker/*", "shared/*", "ssl/*"]
+skip_glob=[".venv/*", ".vscode/*", "alembic/*", "docker/*", "shared/*", "ssl/*"]
 include_trailing_comma = true
 
 [tool.black]
 skip-string-normalization = true
 line-length = 90
-exclude = '(\.git|\.venv|\.vscode|\docker|\shared|\ssl)'
+exclude = '(\.git|\.venv|\.vscode|\alembic|\docker|\shared|\ssl)'
+
+[mypy]
+mypy_path = "./api"
+files = ["*.py"]

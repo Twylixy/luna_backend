@@ -19,13 +19,13 @@ class DiscordUser(BaseModel):
     id: int
     username: str
     discriminator: str
-    avatar: str
+    avatar: Optional[str] = None
     accent_color: Optional[int] = None
     locale: str
     email: str
 
 
-class DiscordServer(BaseModel):
+class DiscordGuild(BaseModel):
     """Represents Discord server."""
 
     id: int

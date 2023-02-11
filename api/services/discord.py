@@ -1,22 +1,22 @@
+import logging
 import os
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
-import requests
+import aiohttp
 
 from api.entities.discord import (
-    DiscordServer,
+    DiscordGuild,
     DiscordUser,
     OAuth2TokenCredentials,
 )
 
+# define admin rights from Discord
+admin_perms = 0x80
 
-class DiscordPermission:
-    """Represents Discord permissions."""
-
-    administrator = 0x80
+logger = logging.getLogger('services.discord')
 
 
-def get_oauth2_credentials(
+async def get_oauth2_credentials(
     discord_code: str,
     redirect_uri: str,
 ) -> Optional[OAuth2TokenCredentials]:
@@ -29,31 +29,32 @@ def get_oauth2_credentials(
     Returns:
         Optional[OAuth2TokenCredentials]
     """
-    oauth2_request = requests.post(
-        '{0}/oauth2/token'.format(
-            os.getenv('DISCORD_ENDPOINT'),
-        ),
-        data={
-            'client_id': os.getenv('CLIENT_ID'),
-            'client_secret': os.getenv('CLIENT_SECRET'),
-            'grant_type': 'authorization_code',
-            'code': discord_code,
-            'redirect_uri': redirect_uri,
-        },
-        headers={
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-    )
+    oauth2_request = None
+    url = '{0}/oauth2/token'.format(os.getenv('DISCORD_ENDPOINT'))
+    payload = {
+        'client_id': os.getenv('CLIENT_ID'),
+        'client_secret': os.getenv('CLIENT_SECRET'),
+        'grant_type': 'authorization_code',
+        'code': discord_code,
+        'redirect_uri': redirect_uri,
+    }
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+    }
 
-    try:
-        oauth2_request.raise_for_status()
-    except requests.HTTPError:
-        return None
+    async with aiohttp.ClientSession(headers=headers) as session:
+        async with session.post(url, data=payload) as response:
+            try:
+                response.raise_for_status()
+            except aiohttp.ClientResponseError as error:
+                logger.error(error.message)
+                return None
+            oauth2_request = await response.json()
 
-    return OAuth2TokenCredentials(**oauth2_request.json())
+    return OAuth2TokenCredentials(**oauth2_request)
 
 
-def get_discord_user(access_token: str) -> Optional[DiscordUser]:
+async def get_discord_user(access_token: str) -> Optional[DiscordUser]:
     """
     Get user from discord.
 
@@ -62,65 +63,63 @@ def get_discord_user(access_token: str) -> Optional[DiscordUser]:
     Returns:
         Optional[DiscordUser]
     """
-    get_user_request = requests.get(
-        '{0}/users/@me'.format(
-            os.getenv('DISCORD_ENDPOINT'),
-        ),
-        headers={
-            'Authorization': 'Bearer {0}'.format(
-                access_token,
-            ),
-        },
-    )
+    get_user_request = None
+    url = '{0}/users/@me'.format(os.getenv('DISCORD_ENDPOINT'))
+    headers = {'Authorization': 'Bearer {0}'.format(access_token)}
 
-    try:
-        get_user_request.raise_for_status()
-    except requests.HTTPError:
-        return None
+    async with aiohttp.ClientSession(headers=headers) as session:
+        async with session.get(url) as response:
+            try:
+                response.raise_for_status()
+            except aiohttp.ClientResponseError as error:
+                logger.error(error.message)
+                return None
+            get_user_request = await response.json()
 
-    return DiscordUser(**get_user_request.json())
+    avatar = get_user_request.get('avatar')
+
+    if avatar is not None:
+        new_avatar = 'https://cdn.discordapp.com/avatars/{0}/{1}.png'.format(
+            get_user_request['id'],
+            avatar,
+        )
+        get_user_request['avatar'] = new_avatar
+
+    return DiscordUser(**get_user_request)
 
 
-def get_user_guilds(access_token: str) -> Tuple[bool, Optional[List[DiscordServer]]]:
+async def get_user_guilds(access_token: str) -> Optional[List[DiscordGuild]]:
     """
     Get user's guilds from Discord.
-    Boolean in return defines whether response was success.
 
     Args:
         access_token: str
     Returns:
-        Tuple[bool, Optional[List[DiscordServer]]]
+        Optional[List[DiscordGuild]]
     """
-    get_guilds_request = requests.get(
-        '{0}/users/@me/guilds'.format(
-            os.getenv('DISCORD_ENDPOINT'),
-        ),
-        headers={
-            'Authorization': 'Bearer {0}'.format(
-                access_token,
-            ),
-        },
-    )
+    get_guilds_request = None
+    url = '{0}/users/@me/guilds'.format(os.getenv('DISCORD_ENDPOINT'))
+    headers = {'Authorization': 'Bearer {0}'.format(access_token)}
 
-    try:
-        get_guilds_request.raise_for_status()
-    except requests.HTTPError:
-        return (False, None)
+    async with aiohttp.ClientSession(headers=headers) as session:
+        async with session.get(url) as response:
+            try:
+                response.raise_for_status()
+            except aiohttp.ClientResponseError as error:
+                logger.error(error.message)
+                return None
+            get_guilds_request = await response.json()
 
-    raw_guilds = get_guilds_request.json()
     guilds = []
 
-    for raw_guild in raw_guilds:
+    for raw_guild in get_guilds_request:
         permissions = raw_guild.get('permissions')
         icon_hash = raw_guild.get('icon')
 
         if permissions is None:
             continue
 
-        if (
-            DiscordPermission.administrator & int(permissions)
-            != DiscordPermission.administrator
-        ):
+        if admin_perms & int(permissions) != admin_perms:
             continue
 
         raw_guild['permissions'] = int(permissions)
@@ -129,12 +128,14 @@ def get_user_guilds(access_token: str) -> Tuple[bool, Optional[List[DiscordServe
             icon_hash,
         )
 
-        guilds.append(DiscordServer(**raw_guild))
+        guilds.append(DiscordGuild(**raw_guild))
 
-    return (True, guilds) if guilds else (True, None)
+    return guilds
 
 
-def refresh_oauth2_credentials(refresh_token: str) -> Optional[OAuth2TokenCredentials]:
+async def refresh_oauth2_credentials(
+    refresh_token: str,
+) -> Optional[OAuth2TokenCredentials]:
     """
     Refresh oauth2 credentials.
 
@@ -143,24 +144,23 @@ def refresh_oauth2_credentials(refresh_token: str) -> Optional[OAuth2TokenCreden
     Returns:
         Optional[OAuth2TokenCredentials]
     """
-    refresh_request = requests.post(
-        '{0}/oauth2/token'.format(
-            os.getenv('DISCORD_ENDPOINT'),
-        ),
-        data={
-            'client_id': os.getenv('CLIENT_ID'),
-            'client_secret': os.getenv('CLIENT_SECRET'),
-            'grant_type': 'refresh_token',
-            'refresh_token': refresh_token,
-        },
-        headers={
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-    )
+    refresh_request = None
+    url = '{0}/oauth2/token'.format(os.getenv('DISCORD_ENDPOINT'))
+    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    payload = {
+        'client_id': os.getenv('CLIENT_ID'),
+        'client_secret': os.getenv('CLIENT_SECRET'),
+        'grant_type': 'refresh_token',
+        'refresh_token': refresh_token,
+    }
 
-    try:
-        refresh_request.raise_for_status()
-    except requests.HTTPError:
-        return None
+    async with aiohttp.ClientSession(headers=headers) as session:
+        async with session.post(url, data=payload) as response:
+            try:
+                response.raise_for_status()
+            except aiohttp.ClientResponseError as error:
+                logger.error(error.message)
+                return None
+            refresh_request = await response.json()
 
-    return OAuth2TokenCredentials(**refresh_request.json())
+    return OAuth2TokenCredentials(**refresh_request)

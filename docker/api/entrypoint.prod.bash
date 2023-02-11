@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+source ./.venv/bin/activate
 
 echo "Run migrations"
 alembic upgrade head

@@ -2,10 +2,9 @@
 The Discord bot for [Dusked Ocean Discord Server](https://discord.gg/8rNYvSnR7c)
 
 ## Requirements
-* Debian/Ubuntu
 * Docker
-* Docker-compose
-* Poetry (Optional)
+* Docker-Compose 
+* Poetry 1.2.0 (Optional)
 
 ## Prepare
 Clone repository
@@ -13,9 +12,8 @@ Clone repository
 $ git clone https://github.com/Twylixy/luna_backend.git
 ```
 (Optional) Install Poetry.
-```bash
-$ python3 -m pip install poetry
-```
+Read about installing [here](https://python-poetry.org/docs/#installation)
+
 Configure **.env.example** and save as **.env.dev** or **.env.production**.
 **Note:** Detailed information about **.env** configurations provided in **ENVFILES.md**
 
@@ -23,7 +21,6 @@ Configure **.env.example** and save as **.env.dev** or **.env.production**.
 </br>
 
 ## Deploy
-**Note:** argument *-p* isn't required
 ### Develope
 ```bash
 $ docker-compose -f docker-compose.dev.yml -p "luna" up --build -d
@@ -42,3 +39,28 @@ To add environment variables use that instructions:
 * Execute `poetry install` (if you didn't do that before)
 * Open `PROJECT_HOME\.venv\Scripts\activate.ps1`
 * Add all required variables from `.env(.prod|.dev)` file. Example `$env:VAR_NAME=VALUE` 
+
+## Debug
+For debug use dev version of project, then you've to setup vscode debugger for python with this configuration.
+Place it in `~/.vscode/launch.json`
+Port may be changed, but don't forget to change it in `docker-compose.dev.yml` in `api` service.
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: FastAPI (remote)",
+      "type": "python",
+      "request": "attach",
+      "port": 5678,
+      "host": "localhost",
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}",
+          "remoteRoot": "/usr/src/luna_api"
+        }
+      ]
+    }
+  ]
+}
+```

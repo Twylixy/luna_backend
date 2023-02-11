@@ -4,6 +4,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+from typing import Generator
+
 SQLALCHEMY_DATABASE_URL = 'postgresql://{0}:{1}@{2}:{3}/{4}'.format(
     os.getenv('POSTGRES_USER'),
     os.getenv('POSTGRES_PASSWORD'),
@@ -16,8 +18,7 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL)
 DatabaseSession = sessionmaker(autocommit=False, bind=engine)
 BaseModel = declarative_base()
 
-
-def get_session() -> None:
+def get_session() -> Generator:
     """
     Return session to database.
 
