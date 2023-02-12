@@ -1,10 +1,9 @@
 import os
+from typing import Generator
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-
-from typing import Generator
 
 SQLALCHEMY_DATABASE_URL = 'postgresql://{0}:{1}@{2}:{3}/{4}'.format(
     os.getenv('POSTGRES_USER'),

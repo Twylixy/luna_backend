@@ -1,6 +1,6 @@
 services:
   database:
-    image: postgres:14.2
+    image: postgres:15.2-alpine3.17
     container_name: database
     env_file: ./.env.dev
     healthcheck:

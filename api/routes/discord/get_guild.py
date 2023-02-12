@@ -1,6 +1,7 @@
 from typing import Union
 
 from fastapi import APIRouter, Depends
+from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
@@ -8,7 +9,6 @@ from api.database.engine import get_session
 from api.entities.http import HTTPResponseCode
 from api.helpers.bearer import exchange_bearer_to_token
 from api.responses.discord.get_guild import GetGuildResponse
-from fastapi.responses import JSONResponse
 from api.responses.error import ErrorResponse
 from api.services.discord import get_user_guilds
 

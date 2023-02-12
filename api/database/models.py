@@ -19,7 +19,12 @@ class GuildModel(BaseModel):
     __tablename__ = 'guilds'
 
     id = Column(Integer, primary_key=True)
-    guild_id = Column(Integer, unique=True)
+    guild_id = Column(Integer, unique=True, nullable=False)
+    settings_id = Column(
+        Integer,
+        ForeignKey('guild_settings.id', ondelete='CASCADE'),
+        unique=True,
+    )
 
 
 class UserModel(BaseModel):
@@ -28,23 +33,22 @@ class UserModel(BaseModel):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
-    discord_id = Column(BigInteger, unique=True)
+    discord_id = Column(BigInteger, unique=True, nullable=False)
     email = Column(Text, default=None)
 
 
-class InfractorSettingsModel(BaseModel):
-    """Represents an infractor settings model."""
+class GuildSettingsModel(BaseModel):
+    """Represents a guild_settings model."""
 
-    __tablename__ = 'infractor_settings'
+    __tablename__ = 'guild_settings'
 
     id = Column(Integer, primary_key=True)
-    guild_id = Column(BigInteger, ForeignKey('guilds.guild_id', ondelete='CASCADE'))
-    infractor_is_enabled = Column(Boolean, default=False)
-    bad_words_is_enabled = Column(Boolean, default=False)
-    bad_words_dictionary = Column(Text, default=None)
-    link_filter_is_enabled = Column(Boolean, default=False)
-    link_filter_dictionary = Column(Text, default=None)
-    spam_detector_is_enabled = Column(Boolean, default=False)
+    guild_id = Column(BigInteger, nullable=False)
+    prefix = Column(Text, default='-', nullable=False)
+    welcome_channel = Column(BigInteger, default=None)
+    welcome_message = Column(Text, default=None)
+    leave_channel = Column(BigInteger, default=None)
+    leave_message = Column(Text, default=None)
 
 
 class SavedMessageModel(BaseModel):
