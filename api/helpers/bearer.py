@@ -1,10 +1,41 @@
+import os
 from datetime import datetime, timedelta
 from typing import Optional
 
+from fastapi import HTTPException, Request
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
 from api.database.models import TokenModel
+from api.entities.http import HTTPResponseCode
 from api.services.discord import get_discord_user, refresh_oauth2_credentials
+
+
+async def bearer_database_dependency(request: Request) -> HTTPAuthorizationCredentials:
+    bearer = HTTPBearer(scheme_name='Bearer')
+    bearer_credentials: Optional[HTTPAuthorizationCredentials]
+
+    try:
+        bearer_credentials = await bearer(request)
+    except HTTPException as error:
+        raise HTTPException(
+            status_code=HTTPResponseCode.forbidden,
+            detail='Not authenticated',
+            headers={
+                'WWW-Authenticate': 'Bearer',
+            },
+        )
+
+    if bearer_credentials is None or bearer_credentials != os.getenv('DATABASE_API_KEY'):
+        raise HTTPException(
+            status_code=HTTPResponseCode.forbidden,
+            detail='Not authenticated',
+            headers={
+                'WWW-Authenticate': 'Bearer',
+            },
+        )
+
+    return bearer_credentials
 
 
 async def exchange_bearer_to_token(session: Session, bearer: str) -> Optional[TokenModel]:

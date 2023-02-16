@@ -15,10 +15,10 @@ from api.responses.auth.discord import DiscordAuthResponse
 from api.responses.error import ErrorResponse
 from api.services import discord
 
-router = APIRouter(prefix='/api/auth', tags=['auth'])
+discord_auth_router = APIRouter()
 
 
-@router.post(
+@discord_auth_router.post(
     '/discord',
     response_model=DiscordAuthResponse,
     responses={

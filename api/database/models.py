@@ -19,12 +19,8 @@ class GuildModel(BaseModel):
     __tablename__ = 'guilds'
 
     id = Column(Integer, primary_key=True)
-    guild_id = Column(Integer, unique=True, nullable=False)
-    settings_id = Column(
-        Integer,
-        ForeignKey('guild_settings.id', ondelete='CASCADE'),
-        unique=True,
-    )
+    guild_id = Column(BigInteger, unique=True, nullable=False)
+    settings_id = Column(Integer, unique=True)
 
 
 class UserModel(BaseModel):
@@ -43,7 +39,7 @@ class GuildSettingsModel(BaseModel):
     __tablename__ = 'guild_settings'
 
     id = Column(Integer, primary_key=True)
-    guild_id = Column(BigInteger, nullable=False)
+    guild_id = Column(BigInteger, ForeignKey('guild_settings.id', ondelete='CASCADE'))
     prefix = Column(Text, default='-', nullable=False)
     welcome_channel = Column(BigInteger, default=None)
     welcome_message = Column(Text, default=None)

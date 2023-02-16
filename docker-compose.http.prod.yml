@@ -1,6 +1,6 @@
 services:
   database:
-    image: postgres:14.2
+    image: postgres:15.2-alpine3.17
     restart: on-failure:3
     container_name: database
     volumes:
@@ -44,7 +44,7 @@ services:
   nginx:
     build:
       context: .
-      dockerfile: ./docker/nginx/Dockerfile.prod
+      dockerfile: ./docker/nginx/Dockerfile.http.prod
     container_name: nginx
     env_file: ./.env.production
     restart: on-failure:3
@@ -53,7 +53,6 @@ services:
         condition: service_healthy
     ports:
       - 7080:80
-      - 7443:443
     networks:
       - luna_network
 

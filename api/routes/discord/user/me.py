@@ -8,17 +8,17 @@ from sqlalchemy.orm import Session
 from api.database.engine import get_session
 from api.entities.http import HTTPResponseCode
 from api.helpers.bearer import exchange_bearer_to_token
-from api.responses.discord.get_guilds import GetGuildsResponse
+from api.responses.discord.get_me import GetMeResponse
 from api.responses.error import ErrorResponse
-from api.services.discord import get_user_guilds
+from api.services.discord import get_discord_user
 
-router = APIRouter(prefix='/api/discord', tags=['discord'])
+user_me_router = APIRouter()
 bearer_dependency = HTTPBearer(scheme_name='Bearer')
 
 
-@router.get(
-    '/get_guilds',
-    response_model=GetGuildsResponse,
+@user_me_router.get(
+    '/me',
+    response_model=GetMeResponse,
     responses={
         HTTPResponseCode.bad_request: {'model': ErrorResponse},
     },
@@ -26,14 +26,14 @@ bearer_dependency = HTTPBearer(scheme_name='Bearer')
 async def get_guilds(
     bearer: HTTPAuthorizationCredentials = Depends(bearer_dependency),
     session: Session = Depends(get_session),
-) -> Union[GetGuildsResponse, JSONResponse]:
+) -> Union[GetMeResponse, JSONResponse]:
     """
-    Fetch user's guilds from discord.
+    Return Discord user.
 
     Args:
       request: GetGuildsRequest
     Returns:
-      Union[GetGuildsResponse, ErrorResponse]
+      Union[GetMeResponse, ErrorResponse]
     """
     token_object = await exchange_bearer_to_token(session, bearer.credentials)
 
@@ -48,9 +48,9 @@ async def get_guilds(
             ).dict(),
         )
 
-    guilds = await get_user_guilds(token_object.access_token)
+    user = await get_discord_user(token_object.access_token)
 
-    return GetGuildsResponse(
+    return GetMeResponse(
         status='success',
-        guilds=guilds,
+        user=user,
     )
