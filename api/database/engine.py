@@ -3,7 +3,7 @@ from typing import Generator
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 
 SQLALCHEMY_DATABASE_URL = 'postgresql://{0}:{1}@{2}:{3}/{4}'.format(
     os.getenv('POSTGRES_USER'),
@@ -17,7 +17,8 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL)
 DatabaseSession = sessionmaker(autocommit=False, bind=engine)
 BaseModel = declarative_base()
 
-def get_session() -> Generator:
+
+def get_session() -> Generator[Session, None, None]:
     """
     Return session to database.
 
@@ -28,5 +29,5 @@ def get_session() -> Generator:
 
     try:
         yield session
-    except Exception:
+    finally:
         session.close()

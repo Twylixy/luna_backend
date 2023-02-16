@@ -21,6 +21,7 @@ sqlalchemy = {extras = ["mypy"], version = "^2.0.3"}
 mypy = "^1.0.0"
 isort = "^5.12.0"
 black = "^23.1.0"
+pyflakes = "^3.0.1"
 
 [tool.poetry.group.debug.dependencies]
 debugpy = "^1.6.3"
@@ -40,5 +41,4 @@ line-length = 90
 exclude = '(\.git|\.venv|\.vscode|\alembic|\docker|\shared|\ssl)'
 
 [mypy]
-mypy_path = "./api"
 files = ["*.py"]
