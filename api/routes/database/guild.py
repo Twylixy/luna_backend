@@ -19,18 +19,19 @@ from api.responses.database.guild import (
 )
 from api.responses.error import ErrorResponse
 
-database_guild_crud_router = APIRouter(prefix='/guilds')
+database_guild_crud_router = APIRouter(
+    responses={
+        HTTPResponseCode.bad_request: {'model': ErrorResponse},
+        HTTPResponseCode.unauthorized: {'model': ErrorResponse},
+        HTTPResponseCode.forbidden: {'description': 'Wrong token or not provided'},
+    },
+)
 bearer_dependency = HTTPBearer(scheme_name='Bearer')
 
 
 @database_guild_crud_router.get(
     '/{guild_id}',
     response_model=GetDatabaseGuildResponse,
-    responses={
-        HTTPResponseCode.bad_request: {'model': ErrorResponse},
-        HTTPResponseCode.unauthorized: {'model': ErrorResponse},
-        HTTPResponseCode.forbidden: {'description': 'Wrong token or not provided'},
-    },
 )
 async def get_guild(
     guild_id: int,
@@ -76,11 +77,6 @@ async def get_guild(
 @database_guild_crud_router.post(
     '/create',
     response_model=CreateDatabaseGuildResponse,
-    responses={
-        HTTPResponseCode.bad_request: {'model': ErrorResponse},
-        HTTPResponseCode.unauthorized: {'model': ErrorResponse},
-        HTTPResponseCode.forbidden: {'description': 'Wrong token or not provided'},
-    },
 )
 async def create_guild(
     request: CreateDatabaseGuildRequest,
@@ -140,11 +136,6 @@ async def create_guild(
 @database_guild_crud_router.patch(
     '/update/{guild_id}',
     response_model=UpdateDatabaseGuildResponse,
-    responses={
-        HTTPResponseCode.bad_request: {'model': ErrorResponse},
-        HTTPResponseCode.unauthorized: {'model': ErrorResponse},
-        HTTPResponseCode.forbidden: {'description': 'Wrong token or not provided'},
-    },
 )
 async def update_guild(
     guild_id: int,
@@ -193,11 +184,6 @@ async def update_guild(
 @database_guild_crud_router.delete(
     '/delete/{guild_id}',
     response_model=DeleteDatabaseGuildResponse,
-    responses={
-        HTTPResponseCode.bad_request: {'model': ErrorResponse},
-        HTTPResponseCode.unauthorized: {'model': ErrorResponse},
-        HTTPResponseCode.forbidden: {'description': 'Wrong token or not provided'},
-    },
 )
 async def delete_guild(
     guild_id: int,

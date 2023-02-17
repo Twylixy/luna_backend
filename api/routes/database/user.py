@@ -22,18 +22,19 @@ from api.responses.database.user import (
 )
 from api.responses.error import ErrorResponse
 
-database_user_crud_router = APIRouter(prefix='/users')
+database_user_crud_router = APIRouter(
+    responses={
+        HTTPResponseCode.bad_request: {'model': ErrorResponse},
+        HTTPResponseCode.unauthorized: {'model': ErrorResponse},
+        HTTPResponseCode.forbidden: {'description': 'Wrong token or not provided'},
+    },
+)
 bearer_dependency = HTTPBearer(scheme_name='Bearer')
 
 
 @database_user_crud_router.get(
     '/{discord_id}',
     response_model=GetDatabaseUserResponse,
-    responses={
-        HTTPResponseCode.bad_request: {'model': ErrorResponse},
-        HTTPResponseCode.unauthorized: {'model': ErrorResponse},
-        HTTPResponseCode.forbidden: {'description': 'Wrong token or not provided'},
-    },
 )
 async def get_user(
     discord_id: int,
@@ -81,11 +82,6 @@ async def get_user(
 @database_user_crud_router.post(
     '/create',
     response_model=CreateDatabaseUserResponse,
-    responses={
-        HTTPResponseCode.bad_request: {'model': ErrorResponse},
-        HTTPResponseCode.unauthorized: {'model': ErrorResponse},
-        HTTPResponseCode.forbidden: {'description': 'Wrong token or not provided'},
-    },
 )
 async def create_user(
     request: CreateDatabaseUserRequest,
@@ -141,11 +137,6 @@ async def create_user(
 @database_user_crud_router.patch(
     '/update/{discord_id}',
     response_model=UpdateDatabaseUserResponse,
-    responses={
-        HTTPResponseCode.bad_request: {'model': ErrorResponse},
-        HTTPResponseCode.unauthorized: {'model': ErrorResponse},
-        HTTPResponseCode.forbidden: {'description': 'Wrong token or not provided'},
-    },
 )
 async def update_user(
     discord_id: int,
@@ -198,11 +189,6 @@ async def update_user(
 @database_user_crud_router.delete(
     '/delete/{discord_id}',
     response_model=DeleteDatabaseUserResponse,
-    responses={
-        HTTPResponseCode.bad_request: {'model': ErrorResponse},
-        HTTPResponseCode.unauthorized: {'model': ErrorResponse},
-        HTTPResponseCode.forbidden: {'description': 'Wrong token or not provided'},
-    },
 )
 async def delete_user(
     discord_id: int,

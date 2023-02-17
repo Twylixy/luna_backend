@@ -15,16 +15,14 @@ from api.responses.auth.discord import DiscordAuthResponse
 from api.responses.error import ErrorResponse
 from api.services import discord
 
-discord_auth_router = APIRouter()
-
-
-@discord_auth_router.post(
-    '/discord',
-    response_model=DiscordAuthResponse,
+discord_auth_router = APIRouter(
     responses={
         HTTPResponseCode.bad_request: {'model': ErrorResponse},
     },
 )
+
+
+@discord_auth_router.post('/', response_model=DiscordAuthResponse)
 async def discord_auth(
     request: DiscordAuthRequest,
     session: Session = Depends(get_session),

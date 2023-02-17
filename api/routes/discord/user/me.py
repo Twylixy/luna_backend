@@ -12,17 +12,15 @@ from api.responses.discord.get_me import GetMeResponse
 from api.responses.error import ErrorResponse
 from api.services.discord import get_discord_user
 
-user_me_router = APIRouter()
-bearer_dependency = HTTPBearer(scheme_name='Bearer')
-
-
-@user_me_router.get(
-    '/me',
-    response_model=GetMeResponse,
+user_me_router = APIRouter(
     responses={
         HTTPResponseCode.bad_request: {'model': ErrorResponse},
     },
 )
+bearer_dependency = HTTPBearer(scheme_name='Bearer')
+
+
+@user_me_router.get('/', response_model=GetMeResponse)
 async def get_guilds(
     bearer: HTTPAuthorizationCredentials = Depends(bearer_dependency),
     session: Session = Depends(get_session),
