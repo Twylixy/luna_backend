@@ -1,24 +1,54 @@
-# Pull image
-FROM python:3.9.8-alpine
+# Builder image
+FROM python:3.11-buster AS stage
+
+SHELL ["/bin/bash", "-c"]
 
 # Env vars
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
+COPY ./pyproject.toml .
+COPY ./poetry.lock .
+
+# Install poetry
+ENV VIRTUAL_ENV=/venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+RUN python -m venv ${VIRTUAL_ENV}
+
+RUN python -m pip install "poetry==1.2.2"
+RUN poetry config virtualenvs.in-project true
+RUN poetry config virtualenvs.path ${VIRTUAL_ENV}
+RUN poetry install --without lint
+
+
+
+
+# Final dev image
+FROM python:3.11-buster AS final
+
+SHELL ["/bin/bash", "-c"]
+
+# Env vars
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV VIRTUAL_ENV=/venv
+
 # Set workdir
 WORKDIR /usr/src/luna_api
 
 # Copy project
-COPY . .
+COPY ./docker/ ./docker
+COPY ./api/ ./api
+COPY ./alembic ./alembic
+COPY ./poetry.lock .
+COPY ./pyproject.toml .
+COPY ./alembic.ini .
 
-# Project dependencies
-RUN apk update
-RUN apk add postgresql-dev gcc musl-dev
-RUN python -m pip install poetry
-RUN python -m poetry config virtualenvs.create false
-RUN python -m poetry install --no-dev
+# Copy dependencies
+COPY --from=stage ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
-RUN chmod +x /usr/src/luna_api/docker/api/entrypoint.dev.sh
+# Add +x to entrypoint
+RUN chmod +x ./docker/api/entrypoint.dev.bash
 
 # Entrypoint
-ENTRYPOINT ["/bin/sh", "/usr/src/luna_api/docker/api/entrypoint.dev.sh"]
+ENTRYPOINT ["/bin/bash", "/usr/src/luna_api/docker/api/entrypoint.dev.bash"]

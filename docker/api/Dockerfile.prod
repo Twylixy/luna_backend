@@ -1,5 +1,5 @@
 # IMAGE
-FROM python:3.9.8-alpine
+FROM python:3.11-buster
 
 # Env vars
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -11,7 +11,8 @@ RUN mkdir -p /home/luna
 RUN mkdir -p ${PROJECT_STATIC_ROOT}
 
 # Create app user
-RUN addgroup -S luna && adduser -S luna -G luna
+RUN adduser --disabled-password --gecos "" luna
+RUN usermod -a -G luna luna
 
 # Create dirs for project
 ENV PROJECT_HOME=/home/luna/luna_api
@@ -19,17 +20,19 @@ RUN mkdir -p ${PROJECT_HOME}
 WORKDIR ${PROJECT_HOME}
 
 # Add project's files
-COPY ./docker/ ./docker/
-COPY ./web/ ./web/
+COPY ./docker/ ./docker
+COPY ./api/ ./api
+COPY ./alembic ./alembic
 COPY ./poetry.lock .
 COPY ./pyproject.toml .
+COPY ./alembic.ini .
 
 # Copy entrypoint.prod.sh
-RUN chmod +x ${PROJECT_HOME}/docker/api/entrypoint.prod.sh
+RUN chmod +x ${PROJECT_HOME}/docker/api/entrypoint.prod.bash
 
 # Install project dependencies
-RUN apk update
-RUN apk add postgresql-dev gcc musl-dev curl
+RUN apt update
+RUN apt install curl
 RUN python -m pip install poetry
 RUN python -m poetry config virtualenvs.create false
 RUN python -m poetry install --no-dev
@@ -42,4 +45,4 @@ RUN chown -R luna:luna ${PROJECT_STATIC_ROOT}
 USER luna
 
 # Entrypoint
-ENTRYPOINT ["/bin/sh", "/home/luna/luna_api/docker/api/entrypoint.prod.sh"]
+ENTRYPOINT ["/bin/sh", "/home/luna/luna_api/docker/api/entrypoint.prod.bash"]
