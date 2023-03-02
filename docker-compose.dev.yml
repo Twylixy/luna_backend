@@ -2,6 +2,7 @@ services:
   database:
     image: postgres:15.2-alpine3.17
     container_name: database
+    restart: unless-stopped
     env_file: ./.env.dev
     healthcheck:
       test: [ "CMD", "pg_isready" ]
@@ -17,11 +18,14 @@ services:
       context: .
       dockerfile: ./docker/api/Dockerfile.dev
     container_name: api
+    restart: unless-stopped
     volumes:
       - ./alembic/:/usr/src/luna_api/alembic/
       - ./api/:/usr/src/luna_api/api/
       - ./docker/:/usr/src/luna_api/docker/
     env_file: ./.env.dev
+    environment:
+      - PRODUCTION=false
     ports:
       - 5678:5678
       - 8080:8000

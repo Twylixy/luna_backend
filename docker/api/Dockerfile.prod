@@ -32,7 +32,7 @@ RUN chmod +x ${PROJECT_HOME}/docker/api/entrypoint.prod.bash
 
 # Install project dependencies
 RUN apt update
-RUN apt install curl
+RUN apt install -y curl
 RUN python -m pip install poetry
 RUN python -m poetry config virtualenvs.create false
 RUN python -m poetry install --no-dev

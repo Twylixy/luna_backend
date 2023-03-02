@@ -1,8 +1,8 @@
 services:
   database:
     image: postgres:15.2-alpine3.17
-    restart: on-failure:3
     container_name: database
+    restart: unless-stopped
     volumes:
       - db_volume:/var/lib/postgresql/data/
     env_file: ./.env.production
@@ -21,8 +21,10 @@ services:
       dockerfile: ./docker/api/Dockerfile.prod
     image: twylix/luna_api
     container_name: api
+    restart: unless-stopped
     env_file: ./.env.production
-    restart: on-failure:3
+    environment:
+      - PRODUCTION=true
     depends_on:
       database:
         condition: service_healthy
@@ -42,17 +44,20 @@ services:
       - luna_network
 
   nginx:
-    build:
-      context: .
-      dockerfile: ./docker/nginx/Dockerfile.http.prod
+    image: nginx:1.22-alpine
     container_name: nginx
     env_file: ./.env.production
     restart: on-failure:3
+    volumes:
+      - ./ssl/cert.crt:/etc/ssl/certs/cert.crt
+      - ./ssl/private.key:/etc/ssl/private/private.key
+      - ./docker/nginx/nginx.conf:/etc/nginx/templates/default.conf.template
     depends_on:
       api:
         condition: service_healthy
     ports:
-      - 7080:80
+      - 127.0.0.1:7080:80
+      - 127.0.0.1:7443:443 # Uncomment this line if you want to use HTTPS
     networks:
       - luna_network
 
